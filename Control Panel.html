@@ -499,26 +499,11 @@
             ];
             cloudData.questionsList = JSON.parse(localStorage.getItem('policeQuestionsList')) || [];
             cloudData.explanationsList = JSON.parse(localStorage.getItem('policeExplanationsList')) || [];
+            // تم جعل قائمة الضباط الافتراضية فارغة تماماً هنا
             cloudData.policeAdministrationList = JSON.parse(localStorage.getItem('policeAdministrationList')) || [
-                {
-                    tierTitle: "Senior Commanders",
-                    officers: [
-                        { name: "T-1 ABDULLAH ALOTIBI", rank: "State Trooper Commissioner", img: "ABDULLAH ALOTIBI.png" },
-                        { name: "M-0 Sharlot Klyde", rank: "State High Commander", img: "Sharlot Klyde.png" },
-                        { name: "T-3 Lucas Hunter", rank: "State High Commander", img: "Lucas Hunter.png" }
-                    ]
-                },
-                {
-                    tierTitle: "Chiefs Leadership",
-                    officers: [
-                        { name: "A-1 Manuel Norbega", rank: "LSPD Chief - Swat Commander", img: "Manuel Norbega.png" },
-                        { name: "Nothing", rank: "SASP CHIEF", img: "" }
-                    ]
-                },
-                {
-                    tierTitle: "Department Administration",
-                    officers: []
-                }
+                { tierTitle: "Senior Commanders", officers: [] },
+                { tierTitle: "Chiefs Leadership", officers: [] },
+                { tierTitle: "Department Administration", officers: [] }
             ];
         }
 
@@ -780,13 +765,15 @@
         if (!container) return;
         container.innerHTML = '';
 
+        let hasOfficers = false;
         officersData.forEach((tier, tierIndex) => {
             tier.officers.forEach((off, offIndex) => {
+                hasOfficers = true;
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'rule-edit-item';
                 itemDiv.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <label style="font-size: 13px; color: var(--gold-primary); font-weight: bold;"><i class="fa-solid fa-user-shield"></i> [${tier.tierTitle}] - ضابط (${offIndex + 1})</label>
+                        <label style="font-size: 13px; color: var(--gold-primary); font-weight: bold;"><i class="fa-solid fa-user-shield"></i> [${tier.tierTitle}] - ضابط</label>
                         <select id="off-tier-${tierIndex}-${offIndex}" style="padding:8px; background:#000; color:#fff; border:1px solid var(--panel-border); border-radius:8px;">
                             <option value="Senior Commanders" ${tier.tierTitle === 'Senior Commanders' ? 'selected' : ''}>Senior Commanders</option>
                             <option value="Chiefs Leadership" ${tier.tierTitle === 'Chiefs Leadership' ? 'selected' : ''}>Chiefs Leadership</option>
@@ -804,6 +791,10 @@
                 container.appendChild(itemDiv);
             });
         });
+
+        if (!hasOfficers) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">لا يوجد ضباط حالياً. استخدم نموذج الإضافة بالأعلى لإضافة ضابط جديد.</p>';
+        }
     }
 
     function addNewOfficer() {
