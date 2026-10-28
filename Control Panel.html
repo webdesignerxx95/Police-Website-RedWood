@@ -434,13 +434,12 @@
 <script>
     const RENDER_SERVER_URL = "https://redwood-discord-auth.onrender.com";
 
-    // المتغيرات التي تحمل البيانات محلياً ليتم مزامنتها
     let cloudData = {
         indexSettings: {},
         rulesList: [],
         questionsList: [],
         explanationsList: [],
-        policeOfficersList: []
+        policeAdministrationList: []
     };
 
     async function sendAdminLog(sectionName, actionDetails) {
@@ -456,11 +455,9 @@
         }
     }
 
-    // دالة عامة لإرسال البيانات لسيرفر Render لتحديثها للجميع
     async function saveToCloudServer(dataType, dataContent, sectionName, actionDesc) {
         const userIdInput = sessionStorage.getItem('discord_user_id') || "غير معروفه";
         
-        // تحديث محلياً في المتغير
         cloudData[dataType] = dataContent;
         localStorage.setItem(dataType, JSON.stringify(dataContent));
 
@@ -483,7 +480,6 @@
         }
     }
 
-    // جلب البيانات من السيرفر عند فتح لوحة التحكم
     async function loadDataFromServer() {
         try {
             const res = await fetch(`${RENDER_SERVER_URL}/api/site-data`);
@@ -493,10 +489,9 @@
             if (serverData.rulesList) cloudData.rulesList = serverData.rulesList;
             if (serverData.questionsList) cloudData.questionsList = serverData.questionsList;
             if (serverData.explanationsList) cloudData.explanationsList = serverData.explanationsList;
-            if (serverData.policeOfficersList) cloudData.policeOfficersList = serverData.policeOfficersList;
+            if (serverData.policeAdministrationList) cloudData.policeAdministrationList = serverData.policeAdministrationList;
         } catch (e) {
             console.log("Could not fetch from server, falling back to local storage.");
-            // الاعتماد على التخزين المحلي كبديل مؤقت إذا واجه السيرفر انقطاع
             cloudData.indexSettings = JSON.parse(localStorage.getItem('siteIndexSettings')) || {};
             cloudData.rulesList = JSON.parse(localStorage.getItem('policeRulesList')) || [
                 { text: "1- التعامل مع المواطنين يكون بحدود العمل فقط، و يكون بشكل إحترافي و رسمي دون التطرق إلى الأشياء الشخصية إذا لم يكن لها سبب كافي", color: "#cbd5e1" },
@@ -504,7 +499,27 @@
             ];
             cloudData.questionsList = JSON.parse(localStorage.getItem('policeQuestionsList')) || [];
             cloudData.explanationsList = JSON.parse(localStorage.getItem('policeExplanationsList')) || [];
-            cloudData.policeOfficersList = JSON.parse(localStorage.getItem('policeOfficersList')) || [];
+            cloudData.policeAdministrationList = JSON.parse(localStorage.getItem('policeAdministrationList')) || [
+                {
+                    tierTitle: "Senior Commanders",
+                    officers: [
+                        { name: "T-1 ABDULLAH ALOTIBI", rank: "State Trooper Commissioner", img: "ABDULLAH ALOTIBI.png" },
+                        { name: "M-0 Sharlot Klyde", rank: "State High Commander", img: "Sharlot Klyde.png" },
+                        { name: "T-3 Lucas Hunter", rank: "State High Commander", img: "Lucas Hunter.png" }
+                    ]
+                },
+                {
+                    tierTitle: "Chiefs Leadership",
+                    officers: [
+                        { name: "A-1 Manuel Norbega", rank: "LSPD Chief - Swat Commander", img: "Manuel Norbega.png" },
+                        { name: "Nothing", rank: "SASP CHIEF", img: "" }
+                    ]
+                },
+                {
+                    tierTitle: "Department Administration",
+                    officers: []
+                }
+            ];
         }
 
         loadIndexSettingsToInputs();
@@ -758,72 +773,88 @@
         loadAdminExplanations();
     }
 
-    // --- Police Officers Management ---
+    // --- Police Officers / Administration Management ---
     function loadAdminPoliceOfficers() {
-        const officers = cloudData.policeOfficersList || [];
+        const officersData = cloudData.policeAdministrationList || [];
         const container = document.getElementById('adminPoliceOfficersContainer');
         if (!container) return;
         container.innerHTML = '';
-        officers.forEach((off, index) => {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'rule-edit-item';
-            itemDiv.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <label style="font-size: 13px; color: var(--gold-primary); font-weight: bold;"><i class="fa-solid fa-user-shield"></i> ضابط رقم (${index + 1})</label>
-                    <select id="off-tier-${index}" style="padding:8px; background:#000; color:#fff; border:1px solid var(--panel-border); border-radius:8px;">
-                        <option value="Senior Commanders" ${off.tier === 'Senior Commanders' ? 'selected' : ''}>Senior Commanders</option>
-                        <option value="Chiefs Leadership" ${off.tier === 'Chiefs Leadership' ? 'selected' : ''}>Chiefs Leadership</option>
-                        <option value="Department Administration" ${off.tier === 'Department Administration' ? 'selected' : ''}>Department Administration</option>
-                    </select>
-                </div>
-                <input type="text" id="off-name-${index}" value="${off.name}" placeholder="اسم الضابط" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; border-radius:10px;">
-                <input type="text" id="off-rank-${index}" value="${off.rank}" placeholder="الرتبة" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; border-radius:10px;">
-                <input type="text" id="off-img-${index}" value="${off.img}" placeholder="اسم الصورة" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; border-radius:10px;">
-                <div class="rule-actions-flex">
-                    <button class="btn-save-single" onclick="updateOfficer(${index})"><i class="fa-solid fa-check"></i> حفظ الضابط</button>
-                    <button class="btn-delete" onclick="deleteOfficer(${index})"><i class="fa-solid fa-trash"></i> حذف الضابط</button>
-                </div>
-            `;
-            container.appendChild(itemDiv);
+
+        officersData.forEach((tier, tierIndex) => {
+            tier.officers.forEach((off, offIndex) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'rule-edit-item';
+                itemDiv.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <label style="font-size: 13px; color: var(--gold-primary); font-weight: bold;"><i class="fa-solid fa-user-shield"></i> [${tier.tierTitle}] - ضابط (${offIndex + 1})</label>
+                        <select id="off-tier-${tierIndex}-${offIndex}" style="padding:8px; background:#000; color:#fff; border:1px solid var(--panel-border); border-radius:8px;">
+                            <option value="Senior Commanders" ${tier.tierTitle === 'Senior Commanders' ? 'selected' : ''}>Senior Commanders</option>
+                            <option value="Chiefs Leadership" ${tier.tierTitle === 'Chiefs Leadership' ? 'selected' : ''}>Chiefs Leadership</option>
+                            <option value="Department Administration" ${tier.tierTitle === 'Department Administration' ? 'selected' : ''}>Department Administration</option>
+                        </select>
+                    </div>
+                    <input type="text" id="off-name-${tierIndex}-${offIndex}" value="${off.name}" placeholder="اسم الضابط" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; border-radius:10px;">
+                    <input type="text" id="off-rank-${tierIndex}-${offIndex}" value="${off.rank}" placeholder="الرتبة" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; border-radius:10px;">
+                    <input type="text" id="off-img-${tierIndex}-${offIndex}" value="${off.img}" placeholder="اسم الصورة" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; border-radius:10px;">
+                    <div class="rule-actions-flex">
+                        <button class="btn-save-single" onclick="updateOfficer(${tierIndex}, ${offIndex})"><i class="fa-solid fa-check"></i> حفظ الضابط</button>
+                        <button class="btn-delete" onclick="deleteOfficer(${tierIndex}, ${offIndex})"><i class="fa-solid fa-trash"></i> حذف الضابط</button>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
         });
     }
 
     function addNewOfficer() {
-        const tier = document.getElementById('newOfficerTier').value;
+        const targetTierTitle = document.getElementById('newOfficerTier').value;
         const name = document.getElementById('newOfficerName').value.trim();
         const rank = document.getElementById('newOfficerRank').value.trim();
         const img = document.getElementById('newOfficerImg').value.trim();
         if(!name || !rank) { alert('الرجاء إدخال اسم الضابط ورتبته!'); return; }
         
-        let officers = cloudData.policeOfficersList;
-        officers.push({ tier, name, rank, img });
+        let officersData = cloudData.policeAdministrationList;
+        let targetTier = officersData.find(t => t.tierTitle === targetTierTitle);
+        if (targetTier) {
+            targetTier.officers.push({ name, rank, img });
+        }
+
         document.getElementById('newOfficerName').value = '';
         document.getElementById('newOfficerRank').value = '';
         document.getElementById('newOfficerImg').value = '';
         
-        saveToCloudServer('policeOfficersList', officers, "إدارة قيادات الشرطة", "قام بإضافة ضابط جديد.");
+        saveToCloudServer('policeAdministrationList', officersData, "إدارة قيادات الشرطة", "قام بإضافة ضابط جديد.");
         loadAdminPoliceOfficers();
     }
 
-    function updateOfficer(index) {
-        const tier = document.getElementById(`off-tier-${index}`).value;
-        const name = document.getElementById(`off-name-${index}`).value.trim();
-        const rank = document.getElementById(`off-rank-${index}`).value.trim();
-        const img = document.getElementById(`off-img-${index}`).value.trim();
+    function updateOfficer(tierIndex, offIndex) {
+        const newTierTitle = document.getElementById(`off-tier-${tierIndex}-${offIndex}`).value;
+        const name = document.getElementById(`off-name-${tierIndex}-${offIndex}`).value.trim();
+        const rank = document.getElementById(`off-rank-${tierIndex}-${offIndex}`).value.trim();
+        const img = document.getElementById(`off-img-${tierIndex}-${offIndex}`).value.trim();
         
-        let officers = cloudData.policeOfficersList;
-        officers[index] = { tier, name, rank, img };
+        let officersData = cloudData.policeAdministrationList;
         
-        saveToCloudServer('policeOfficersList', officers, "إدارة قيادات الشرطة", `قام بتعديل بيانات الضابط (${name}).`);
+        let officerObj = officersData[tierIndex].officers.splice(offIndex, 1)[0];
+        officerObj.name = name;
+        officerObj.rank = rank;
+        officerObj.img = img;
+
+        let targetTier = officersData.find(t => t.tierTitle === newTierTitle);
+        if (targetTier) {
+            targetTier.officers.push(officerObj);
+        }
+        
+        saveToCloudServer('policeAdministrationList', officersData, "إدارة قيادات الشرطة", `قام بتعديل بيانات الضابط (${name}).`);
         loadAdminPoliceOfficers();
     }
 
-    function deleteOfficer(index) {
+    function deleteOfficer(tierIndex, offIndex) {
         if(!confirm('هل أنت متأكد من حذف هذا الضابط؟')) return;
-        let officers = cloudData.policeOfficersList;
-        officers.splice(index, 1);
+        let officersData = cloudData.policeAdministrationList;
+        officersData[tierIndex].officers.splice(offIndex, 1);
         
-        saveToCloudServer('policeOfficersList', officers, "إدارة قيادات الشرطة", "قام بحذف ضابط.");
+        saveToCloudServer('policeAdministrationList', officersData, "إدارة قيادات الشرطة", "قام بحذف ضابط.");
         loadAdminPoliceOfficers();
     }
 </script>
