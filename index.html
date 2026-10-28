@@ -72,15 +72,6 @@
             color: #ffffff; background: #1e6091; border-color: rgba(255, 255, 255, 0.3); box-shadow: 0 0 10px var(--gold-glow);
         }
 
-        .header-actions { display: flex; gap: 10px; }
-        .sys-btn {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main);
-            padding: 7px 15px; border-radius: 4px; font-size: 13px; font-weight: 700; cursor: pointer;
-            display: flex; align-items: center; gap: 6px; transition: all 0.3s ease; text-decoration: none;
-        }
-        .sys-btn:hover { background: #3182ce; color: #fff; box-shadow: 0 0 10px #3182ce; }
-        .sys-btn.discord { background: #3182ce; color: #fff; border-color: #3182ce; animation: pulseGlow 3s infinite; }
-
         .hud-container {
             width: 92%; max-width: 1200px; margin: 30px auto;
             display: grid; grid-template-columns: 2fr 1fr; gap: 25px;
@@ -166,7 +157,7 @@
         
         <div>
             <div class="hud-panel hero-panel">
-                <h1>Police <span id="mainTitleDisplay"> department</span></h1>
+                <h1>Police <span id="mainTitleDisplay">department</span></h1>
                 <p id="mainDescDisplay">منظومة الإدارة المركزية والعمليات الأمنية. توفير تفاصيل البروتوكولات، التوزيع الميداني، واللوائح التنظيمية الخاصة بكافة قطاعات الأجهزة الأمنية.</p>
             </div>
 
@@ -216,6 +207,42 @@
         <span style="color: var(--text-muted); font-size: 11px; margin-top: 5px; display: inline-block;">تصميم وتطوير النظام بواسطة X.X95</span>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // رابط سيرفر Render السحابي لجلب البيانات للزوار
+        const RENDER_SERVER_URL = "https://redwood-discord-auth.onrender.com";
+
+        async function loadPublicIndexData() {
+            try {
+                const response = await fetch(`${RENDER_SERVER_URL}/api/site-data`);
+                const data = await response.json();
+
+                // إذا وُجدت إعدادات رئيسية مخزنة على السيرفر، يتم تحديث واجهة الموقع فوراً للجميع
+                if (data.indexSettings) {
+                    const settings = data.indexSettings;
+                    
+                    if (settings.titleWord) document.getElementById('mainTitleDisplay').innerText = settings.titleWord;
+                    if (settings.bio) document.getElementById('mainDescDisplay').innerText = settings.bio;
+                    if (settings.soldierName) document.getElementById('officerNameDisplay').innerText = settings.soldierName;
+                    if (settings.soldierRank) document.getElementById('officerRankDisplay').innerText = settings.soldierRank;
+                    if (settings.soldierNote) document.getElementById('officerNoteDisplay').innerText = settings.soldierNote;
+                    if (settings.policeAlert) document.getElementById('policeAnnouncement').innerText = settings.policeAlert;
+                    
+                    if (settings.tiktokUrl) {
+                        const tiktokBtn = document.getElementById('tiktokLinkDisplay');
+                        if (tiktokBtn) tiktokBtn.href = settings.tiktokUrl;
+                    }
+                    if (settings.discordUrl) {
+                        const discordBtn = document.getElementById('discordLinkDisplay');
+                        if (discordBtn) discordBtn.href = settings.discordUrl;
+                    }
+                }
+            } catch (e) {
+                console.log("Could not load public data from server:", e);
+            }
+        }
+
+        // تنفيذ عملية الجلب فور تحميل الصفحة
+        window.onload = loadPublicIndexData;
+    </script>
 </body>
 </html>
