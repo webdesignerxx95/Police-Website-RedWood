@@ -431,32 +431,27 @@
     <div id="toast" class="toast"><i class="fa-solid fa-circle-check"></i> تم حفظ التغييرات بنجاح!</div>
 
 <script>
-    // رابط الـ Webhook الخاص بديسكورد
-    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1564865685425754273/yv4k0w6-gnfDy5noBwcMm2vDF11xY3Y_hQrxT83XzWAKIdOW4Vmx9VSLIklKR-k2HZsm";
-
-    async function sendAdminLog(actionDescription) {
-        if (!DISCORD_WEBHOOK_URL) return;
-        
-        const embed = {
-            title: "🛡️ | سجل نشاط لوحة التحكم (Admin Log)",
-            description: actionDescription,
-            color: 3245006, // تم تصحيح قيمة اللون هنا برقم عشري سليم
-            timestamp: new Date().toISOString()
-        };
-
-        try {
-            await fetch(DISCORD_WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ embeds: [embed] })
-            });
-        } catch (e) {
-            console.error("Error sending log to Discord:", e);
-        }
-    }        
-
     // رابط سيرفر Render السحابي الخاص بك
     const RENDER_SERVER_URL = "https://redwood-discord-auth.onrender.com";
+
+    // دالة إرسال اللوق المحدثة لترسل أيدي الشخص الحقيقي وقسم التعديل وسجل النشاط
+    async function sendAdminLog(sectionName, actionDetails) {
+        const userIdInput = document.getElementById('passInput').value.trim() || sessionStorage.getItem('discord_user_id') || "غير معروف";
+        
+        try {
+            await fetch(`${RENDER_SERVER_URL}/api/log-action`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: userIdInput,
+                    sectionName: sectionName,
+                    actionDetails: actionDetails
+                })
+            });
+        } catch (e) {
+            console.error("Error sending log to server:", e);
+        }
+    }
 
     async function checkPassword() {
         const userIdInput = document.getElementById('passInput').value.trim();
@@ -483,6 +478,7 @@
                     const dashboard = document.getElementById('dashboard-content');
                     dashboard.style.display = 'flex';
                     sessionStorage.setItem('authMaster', 'true');
+                    sessionStorage.setItem('discord_user_id', userIdInput); // حفظ الأيدي للاستخدام المستقبلي باللوقات
                 }, 400); 
             } else {
                 errorMsg.innerText = 'عذراً، أنت لا تمتلك رتبة الإدارة المطلوبة أو الأيدي خاطئ!';
@@ -543,7 +539,7 @@
         };
         localStorage.setItem('siteIndexSettings', JSON.stringify(settings));
         
-        sendAdminLog("🛡️ قام أحد المشرفين بتحديث **إعدادات الصفحة الرئيسية** للموقع.");
+        sendAdminLog("إعدادات الصفحة الرئيسية", "قام بتحديث إعدادات الصفحة الرئيسية والعسكري الأسبوعي.");
 
         showToast('تم حفظ إعدادات الرئيسية بنجاح!');
     }
@@ -610,6 +606,8 @@
         localStorage.setItem('policeRulesList', JSON.stringify(rules));
         document.getElementById('newRuleText').value = '';
         loadAdminRules();
+        
+        sendAdminLog("إدارة القوانين", "قام بإضافة قانون جديد للموقع.");
         showToast('تمت إضافة القانون بنجاح!');
     }
 
@@ -621,6 +619,8 @@
         rules[index] = { text: updatedText, color: updatedColor };
         localStorage.setItem('policeRulesList', JSON.stringify(rules));
         loadAdminRules();
+        
+        sendAdminLog("إدارة القوانين", `قام بتعديل القانون رقم (${index + 1}).`);
         showToast('تم تحديث القانون واللون بنجاح!');
     }
 
@@ -630,6 +630,8 @@
             rules.splice(index, 1);
             localStorage.setItem('policeRulesList', JSON.stringify(rules));
             loadAdminRules();
+            
+            sendAdminLog("إدارة القوانين", `قام بحذف القانون رقم (${index + 1}).`);
             showToast('تم حذف القانون بنجاح!');
         }
     }
@@ -677,6 +679,8 @@
         document.getElementById('newQuestionTitle').value = '';
         document.getElementById('newQuestionAnswer').value = '';
         loadAdminQuestions();
+        
+        sendAdminLog("إدارة أسئلة الشرطة", "قام بإضافة سؤال جديد للموقع.");
         showToast('تمت إضافة السؤال بنجاح!');
     }
 
@@ -688,6 +692,8 @@
         questions[index] = { q: updatedTitle, a: updatedAnswer };
         localStorage.setItem('policeQuestionsList', JSON.stringify(questions));
         loadAdminQuestions();
+        
+        sendAdminLog("إدارة أسئلة الشرطة", `قام بتعديل السؤال رقم (${index + 1}).`);
         showToast('تم تحديث السؤال بنجاح!');
     }
 
@@ -697,6 +703,8 @@
             questions.splice(index, 1);
             localStorage.setItem('policeQuestionsList', JSON.stringify(questions));
             loadAdminQuestions();
+            
+            sendAdminLog("إدارة أسئلة الشرطة", `قام بحذف السؤال رقم (${index + 1}).`);
             showToast('تم حذف السؤال بنجاح!');
         }
     }
@@ -747,6 +755,8 @@
         document.getElementById('newExplVideoId').value = '';
         document.getElementById('newExplDesc').value = '';
         loadAdminExplanations();
+        
+        sendAdminLog("إدارة شروحات الشرطة", "قام بإضافة شرح فيديو جديد.");
         showToast('تمت إضافة الشرح بنجاح!');
     }
 
@@ -759,6 +769,8 @@
         explanations[index] = { title: updatedTitle, videoId: updatedVid, desc: updatedDesc };
         localStorage.setItem('policeExplanationsList', JSON.stringify(explanations));
         loadAdminExplanations();
+        
+        sendAdminLog("إدارة شروحات الشرطة", `قام بتعديل الشرح رقم (${index + 1}).`);
         showToast('تم تحديث الشرح بنجاح!');
     }
 
@@ -768,6 +780,8 @@
             explanations.splice(index, 1);
             localStorage.setItem('policeExplanationsList', JSON.stringify(explanations));
             loadAdminExplanations();
+            
+            sendAdminLog("إدارة شروحات الشرطة", `قام بحذف الشرح رقم (${index + 1}).`);
             showToast('تم حذف الشرح بنجاح!');
         }
     }
@@ -848,6 +862,8 @@
         document.getElementById('newOfficerRank').value = '';
         document.getElementById('newOfficerImg').value = '';
         loadAdminPoliceOfficers();
+        
+        sendAdminLog("إدارة قيادات الشرطة", `قام بإضافة ضابط جديد (${name}) برتبة (${rank}).`);
         showToast('تمت إضافة الضابط بنجاح!');
     }
 
@@ -861,15 +877,20 @@
 
         localStorage.setItem('policeAdministrationList', JSON.stringify(data));
         loadAdminPoliceOfficers();
+        
+        sendAdminLog("إدارة قيادات الشرطة", `قام بتعديل بيانات الضابط (${name}).`);
         showToast('تم تحديث بيانات الضابط بنجاح!');
     }
 
     function deleteOfficer(tierIndex, offIndex) {
         if(confirm('هل أنت متأكد من حذف هذا الضابط؟')) {
             let data = getPoliceOfficersFromStorage();
+            let deletedName = data[tierIndex].officers[offIndex].name;
             data[tierIndex].officers.splice(offIndex, 1);
             localStorage.setItem('policeAdministrationList', JSON.stringify(data));
             loadAdminPoliceOfficers();
+            
+            sendAdminLog("إدارة قيادات الشرطة", `قام بحذف الضابط (${deletedName}).`);
             showToast('تم حذف الضابط بنجاح!');
         }
     }
