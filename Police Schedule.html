@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedWood Rp Police Schedule</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #06080f;
+            --panel-bg: rgba(13, 17, 26, 0.88);
+            --gold-primary: #3b82f6; /* تم التغيير إلى اللون الأزرق */
+            --gold-glow: rgba(59, 130, 246, 0.15); /* توهج أزرق خفيف */
+            --text-main: #f8fafc; /* أبيض ناصع وناعم للنصوص الرئيسية */
+            --text-muted: #cbd5e1; /* رمادي مائل للبيض للمساعدات */
+            --border-color: rgba(59, 130, 246, 0.2);
+            --red-alert: #3b82f6;
+            --gold-alert: #60a5fa;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+                radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
+            background-size: 30px 30px, 30px 30px, 100% 100%;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Container */
+        .rules-container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .details-view {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .details-header-flex {
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--gold-primary);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .details-header-flex h2 {
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .details-header-flex h2 i {
+            color: var(--gold-primary);
+            text-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        .back-to-dash-btn {
+            background: rgba(59, 130, 246, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-dash-btn:hover {
+            background: var(--gold-primary);
+            color: #fff;
+            box-shadow: 0 0 12px var(--gold-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Content Boxes */
+        .content-item-box, .card {
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+            border-radius: 8px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .content-item-box:hover, .card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .content-item-box::before, .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 8px; height: 8px;
+            border-top: 2px solid var(--gold-primary);
+            border-left: 2px solid var(--gold-primary);
+        }
+        .content-item-box::after, .card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 8px; height: 8px;
+            border-bottom: 2px solid var(--gold-primary);
+            border-right: 2px solid var(--gold-primary);
+        }
+
+        .container h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        iframe { 
+            width: 100%; 
+            border: none; 
+            border-radius: 8px; 
+            min-height: 700px; 
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 12px;
+            background: rgba(6, 8, 15, 0.95);
+            margin-top: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .details-header-flex {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rules-container">
+
+        <div id="sec1" class="details-view">
+            <div class="details-header-flex">
+                <h2 data-en="Military Ranks"><i class="fa-solid fa-star"></i> 9. الجدول العسكري  </h2>
+                <a href="index.html" class="back-to-dash-btn"><i class="fa-solid fa-arrow-right"></i> <span data-en="Back">العودة</span></a>
+            </div>
+            
+            <div class="container">
+                <h1 data-ar="الجدول العسكري | Department Schedule" data-en="Department Schedule">الجدول العسكري | Department Schedule</h1>
+                <div class="card">
+                    <iframe src="https://docs.google.com/spreadsheets/d/1e_sktAROeySzZCxtRGRLXtBDdJUOLb3yEsB7vlW9E8Y/edit?usp=sharing"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <span data-ar="جميع الحقوق محفوظة © 2026 RedWood Rp CFW" data-en="Copyright © 2026 RedWood Rp CFW. All Rights Reserved.">جميع الحقوق محفوظة © 2026 RedWood Rp CFW</span> <br>
+        <span style="color: var(--text-muted); font-size: 11px; margin-top: 5px; display: inline-block;" data-ar="تصميم وتطوير النظام بواسطة X.X95" data-en="System Architecture & Design by X.X95">تصميم وتطوير النظام بواسطة X.X95</span>
+    </footer>
+
+    <script>
+        let currentLang = 'ar';
+
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('htmlRoot');
+            const langText = document.getElementById('langText');
+            const elements = document.querySelectorAll('[data-ar][data-en]');
+
+            if (currentLang === 'ar') {
+                currentLang = 'en';
+                htmlRoot.setAttribute('lang', 'en');
+                htmlRoot.setAttribute('dir', 'ltr');
+                if(langText) langText.textContent = 'AR';
+
+                elements.forEach(el => {
+                    el.textContent = el.getAttribute('data-en');
+                });
+            } else {
+                currentLang = 'ar';
+                htmlRoot.setAttribute('lang', 'ar');
+                htmlRoot.setAttribute('dir', 'rtl');
+                if(langText) langText.textContent = 'EN';
+
+                elements.forEach(el => {
+                    el.textContent = el.getAttribute('data-ar');
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

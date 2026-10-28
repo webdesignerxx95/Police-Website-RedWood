@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedWood Rp Rank Permissions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #06080f;
+            --panel-bg: rgba(13, 17, 26, 0.88);
+            --gold-primary: #3b82f6; /* تم التغيير إلى اللون الأزرق */
+            --gold-glow: rgba(59, 130, 246, 0.15); /* توهج أزرق خفيف */
+            --text-main: #f8fafc; /* أبيض ناصع وناعم للنصوص الرئيسية */
+            --text-muted: #cbd5e1; /* رمادي مائل للبيض للمساعدات */
+            --border-color: rgba(59, 130, 246, 0.2);
+            --red-alert: #3b82f6;
+            --gold-alert: #60a5fa;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+                radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
+            background-size: 30px 30px, 30px 30px, 100% 100%;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+        }
+
+        .rules-container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* أنيميشن الدخول والخروج */
+        .details-view {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        .details-view.fade-out {
+            animation: simpleFadeOut 0.3s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes simpleFadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        .details-header-flex {
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--gold-primary);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .details-header-flex h2 {
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .details-header-flex h2 i {
+            color: var(--gold-primary);
+            text-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        .back-to-dash-btn {
+            background: rgba(59, 130, 246, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-dash-btn:hover {
+            background: var(--gold-primary);
+            color: #fff;
+            box-shadow: 0 0 12px var(--gold-glow);
+        }
+
+        .content-item-box {
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .content-item-box:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .content-item-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 8px; height: 8px;
+            border-top: 2px solid var(--gold-primary);
+            border-left: 2px solid var(--gold-primary);
+        }
+        .content-item-box::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 8px; height: 8px;
+            border-bottom: 2px solid var(--gold-primary);
+            border-right: 2px solid var(--gold-primary);
+        }
+
+        .content-item-box h5 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content-item-box p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .content-item-box p:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 12px;
+            background: rgba(6, 8, 15, 0.95);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .details-header-flex {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rules-container">
+        <div id="sec1" class="details-view">
+            <div class="details-header-flex">
+                <h2><i class="fa-solid fa-star"></i> 7. صلاحيات ومهام الرتب</h2>
+                <div style="display: flex; gap: 150px; align-items: center;">
+                    <span style="color: #ef4444; font-weight: bold; font-size: 15px;" data-en="The color red is very important.">لون أحمر مهم جدا</span>
+                    <a href="index.html" class="back-to-dash-btn" id="backBtn"><i class="fa-solid fa-arrow-right"></i> <span data-en="Back">العودة</span></a>
+                </div>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;"> State Trooper Commissioner </h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- السلطة العليا في إدارة الـجميع القطاعات العسكرية، يمتلك الصلاحية الكاملة والنهائية في جميع القرارات الإدارية والعسكرية والتنظيمية دون وجود أي منصب أعلى منه.</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- قيادة وإدارة جهاز القطاعات العسكرية بالكامل، والإشراف على جميع القطاعات والقيادات</p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Deputy State Trooper Commissioner </h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- نائب القيادة العليا لأدارة جميع القطاعات العسكرية ويمتلك كامل الصلاحيات على جميع القطاعات العسكرية والقيادات العليا</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- قيادة وإدارة جهاز القطاعات العسكرية بالكامل، والإشراف على جميع القطاعات والقيادات</p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">State High Commander </h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- كاملة الصلاحيات الادارية والميدانية في جميع القطاعات العسكرية</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الاشراف على جميع القطاعات العسكرية</p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">SASP CHIEF - Chiefs Leadership</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p style="color: #ef4444; font-weight: bold;">1- كامل الصلاحيات الادارية والميدانية داخل قطاع سان اندريس ستيت بوليس </p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الإشراف على سير العمل داخل القطاع الهاي وي باترول ومتابعة أداء الأفراد والقيادات</p>
+                <p>2- إدارة شؤون القطاع وتنظيم الهيكل الإداري والعسكري</p>
+                <p>3- متابعة الانضباط العسكري والتأكد من تطبيق الأنظمة والتعليمات</p>
+                <p>4- اعتماد الترقيات والتعيينات والتنقلات وفقًا للصلاحيات الممنوحة له</p>
+            </div>
+
+            <div class="content-item-box">
+                <h5 style="color: #fab300; font-weight: bold;">LSPD CHIEF - Chiefs Leadership</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p style="color: #ef4444; font-weight: bold;">1- كامل الصلاحيات الادارية والميدانية داخل قطاع LSPD </p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الإشراف على سير العمل داخل القطاع LSPD ومتابعة أداء الأفراد والقيادات</p>
+                <p>2- إدارة شؤون القطاع وتنظيم الهيكل الإداري والعسكري</p>
+                <p>3- متابعة الانضباط العسكري والتأكد من تطبيق الأنظمة والتعليمات</p>
+                <p>4- اعتماد الترقيات والتعيينات والتنقلات وفقًا للصلاحيات الممنوحة له</p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Captain - Police Administration</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p style="color: #ef4444; font-weight: bold;">1- كامل الصلاحيات الادارية والميداني في قطاع </p>
+                <p style="color: #ef4444; font-weight: bold;">2- يحق له ترقية من كاديت الى لوتينت الى رئاسة الشرطة !! </p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- ادارة العمليات اليومية داخل القطاع التابع له وتوزيع المهام على ضباط والاشراف على تدريبات الاكاديمية او اختبار ضباط الجدد ومتابعة تجهيزات الفرق العسكرية</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">First Lieutenant - Police Commander</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- كامل صلاحيات الميدانية</p>
+                <p>2- يحق محاسبة (كاديت الى ستاف سارجنت)</p>
+                <p>3- يحق له ترشيح ترقية ستاف سارجنت الى لوتينت الى رئاسة الشرطة</p>
+                <p>4- يحق له اعادة تأهيل من كاديت الى ستاف سارجنت (يجب سبب واضح للأعادة التأهيل)</p>
+                <p style="color: #ef4444; font-weight: bold;">5- لديه 25 نقطة اسبوعيه يحق له صرفها لكل فرد وحد اقصى لكل فرد 10 نقطة ويجب رفع تقرير الى شؤون الداخلية بأصدار القرار ولايحق لشؤون الداخلية رفضها!! </p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الاشرف على تنفيذ العمليات الميدانية اليومية ومتابعة اداء ضباط الصف وضباط الاخص فيهم لوتينت ورفع تقرير لأي مخالفة يفعلها ضباط صف او ضباط الى رئاسة الشرطة رئاسة الشرطة تتعامل معه بموجب القانون</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Lieutenant - Police Commander</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- كامل صلاحيات الميدانية</p>
+                <p>2- يحق له ترشيح ترقية فرسيت سارجنت الى ستاف سارجنت الى رئاسة رئاسة الشرطة</p>
+                <p>3- يحق له اعادة تأهيل من كاديت الى سارجنت (يجب سبب واضح للأعادة التأهيل)</p>
+                <p>4- ( يحق لك افشال تفاوض ويجب ان يكون سبب واضح للأفشال )</p>
+                <p style="color: #ef4444; font-weight: bold;">5- في حال فشل التحرير او تم اسقاط الرهينة تتحاسبة انت يامسؤول التحرير </p>
+                <p style="color: #ef4444; font-weight: bold;">6- يحق محاسبة جميع الافراد كمحاسبة ميدانيه وادارية (كاديت - فريست سارجنت) </p>
+                <p style="color: #ef4444; font-weight: bold;">7- لديه 25 نقطة اسبوعيه يحق له صرفها لكل فرد وحد اقصى لكل فرد 10 نقطة!! </p>
+                <p style="color: #ef4444; font-weight: bold;">8- يحق له الخروج كاندر كفر ويجب سبب واضح ويتم تبليغ رئاسة الشرطة بعد انتهاء من الاندر كفر </p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- هذي الرتبه هي بداية سلم ضباط وكضابط ميداني تتبابع اداء ضباط الصف والاخص فريست سارجنت وستاف سارجنت ورفع تقرير لأي مخالفة يفعلها ضباط صف الى شؤون الداخلية والشؤون الداخلية تتعامل معه بموجب القانون</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Staff Sergeant - Watch Commander</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- يحق له محاسبة جميع الافراد كامحاسبة ميدانية وادارية </p>
+                <p>2- كامل صلاحيات الميدانية</p>
+                <p style="color: #ef4444; font-weight: bold;">3- لديه 15 نقطة اسبوعيه يحق له صرفها لكل فرد وحد اقصى لكل فرد 5 نقطة!!</p>
+                <p style="color: #ef4444; font-weight: bold;">4- لايحق له الخروج كأندر كفر مهما كان سبب يجب قبلها تأتي الموافقة من رئاسة الشرطة</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الاشراف الكامل على جميع ضباط الصف</p>
+                <p>2- تقيم اداء ضباط الصف بشكل يومي </p>
+                <p>3- في حال تواجده في ميداني هو المسؤول الاول على جميع ضباط الصف</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">First Sergeant - Police Supervisor</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- له الأحقية التدخل بالحالات الجنائية والتصرف الكامل فيها, ان كان مسؤول الحالة لايجيد التصرف, ولك الأحقية بإستلام الحالة عنه او ايذا كان مسؤول الحالة اعلى منه رتبه</p>
+                <p>2- له الأحقية بالخصم على أي عسكري من سينيور ليد اوفيسر وأقل. بمقدار 5 نقاط تأديبية وقبلها يجب ارفاق تقرير الى شؤون الداخلية ويحق له رفع اعادة تأهيل عسكري الى الاكادمية وتأتي الموافقه منهم</p>
+                <p style="color: #ef4444; font-weight: bold;">3- لايحق له الخروج كأندر كفر مهما كان سبب يجب قبلها تأتي الموافقة من رئاسة الشرطة</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الاشراف على سنيور ليد اوفسر ورفع التقارير الى الشؤون الداخلية في حال اكتشاف اي مخالفة يفعلها سنيور ليد اوفسر</p>
+                <p>2- تنظيم الواحدات العسكريه في ميدان</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Sergeant - Police Supervisor</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- الإشراف على نقاط التفتيش ويحق له اقامة تفتيش في حال عدد وحدات 10 واعلى ويجب ان يكون اعلى رتبه في ميدان</p>
+                <p>2- إصدار أوامر ميدانية فورية</p>
+                <p>3- إعطاء تنبيه أو إنذار شفهي ميداني وافي حال المحاسبة اداريه يجب رفع تقرير الى شؤون الداخلية والشؤون الداخلية له الاحقيه برفض او قبول المحاسبه</p>
+                <p style="color: #ef4444; font-weight: bold;">4- لايحق له الخروج كأندر كفر مهما كان سبب يجب قبلها تأتي الموافقة من رئاسة الشرطة</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الاشراف على سنيور اوفسر ورفع تقرير الى شؤون الداخلية في حال اكتشاف اي مخالفة يفعلها سنيور اوفسر</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Senior Lead Officer</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- يحق له محاسبة الافراد من رتبة اوفسر ون الى كوربورال كمحاسبة ميدانيه وفي حال المحاسبة اداريه يجب رفع تقرير الى الشؤون الداخلية والشؤون الداخلية له الاحقيه برفض او قبول المحاسبة</p>
+                <p style="color: #ef4444; font-weight: bold;">4- لايحق له الخروج كأندر كفر مهما كان سبب يجب قبلها تأتي الموافقة من رئاسة الشرطة</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الاشراف الكامل للافراد من رتبة اوفسر ون الى كوربورال وتوجيههم ومتابعة ادائهم الميداني ورفع الحالات التي تتظلب اجرائات ادارية الى شؤون الداخلية</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <span data-ar="جميع الحقوق محفوظة © 2026 RedWood Rp CFW" data-en="Copyright © 2026 RedWood Rp CFW. All Rights Reserved.">جميع الحقوق محفوظة © 2026 RedWood Rp CFW</span> <br>
+        <span style="color: var(--text-muted); font-size: 11px; margin-top: 5px; display: inline-block;" data-ar="تصميم وتطوير النظام بواسطة X.X95" data-en="System Architecture & Design by X.X95">تصميم وتطوير النظام بواسطة X.X95</span>
+    </footer>
+
+    <script>
+        let currentLang = 'ar';
+
+        document.getElementById('backBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetUrl = this.getAttribute('href');
+            const viewSection = document.getElementById('sec1');
+            
+            viewSection.classList.add('fade-out');
+            
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 300);
+        });
+
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('htmlRoot');
+            const elements = document.querySelectorAll('[data-ar][data-en]');
+
+            if (currentLang === 'ar') {
+                currentLang = 'en';
+                htmlRoot.setAttribute('lang', 'en');
+                htmlRoot.setAttribute('dir', 'ltr');
+
+                elements.forEach(el => {
+                    if(el.hasAttribute('data-en')) {
+                        el.textContent = el.getAttribute('data-en');
+                    }
+                });
+            } else {
+                currentLang = 'ar';
+                htmlRoot.setAttribute('lang', 'ar');
+                htmlRoot.setAttribute('dir', 'rtl');
+
+                elements.forEach(el => {
+                    if(el.hasAttribute('data-ar')) {
+                        el.textContent = el.getAttribute('data-ar');
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

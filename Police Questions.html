@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedWood Rp Police Questions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #06080f;
+            --panel-bg: rgba(13, 17, 26, 0.88);
+            --gold-primary: #3b82f6; /* تم التغيير إلى اللون الأزرق */
+            --gold-glow: rgba(59, 130, 246, 0.15); /* توهج أزرق خفيف */
+            --text-main: #f8fafc; /* أبيض ناصع وناعم للنصوص الرئيسية */
+            --text-muted: #cbd5e1; /* رمادي مائل للبيض للمساعدات */
+            --border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+                radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
+            background-size: 30px 30px, 30px 30px, 100% 100%;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+        }
+
+        .rules-container {
+            width: 92%; max-width: 1200px; margin: 30px auto;
+            display: flex; flex-direction: column; gap: 30px; flex: 1;
+        }
+
+        .details-view { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        .details-view.fade-out {
+            animation: simpleFadeOut 0.3s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes simpleFadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        .details-header-flex {
+            background: var(--panel-bg); backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color); border-left: 3px solid var(--gold-primary);
+            padding: 20px 25px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .details-header-flex h2 {
+            font-size: 22px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 12px;
+        }
+        .details-header-flex h2 i { color: var(--gold-primary); text-shadow: 0 0 8px var(--gold-glow); }
+
+        .back-to-dash-btn {
+            background: rgba(59, 130, 246, 0.03); border: 1px solid var(--border-color);
+            color: var(--text-main); padding: 8px 16px; border-radius: 4px; font-size: 13px;
+            font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            text-decoration: none; transition: all 0.3s ease;
+        }
+        .back-to-dash-btn:hover { background: var(--gold-primary); color: #fff; box-shadow: 0 0 12px var(--gold-glow); }
+
+        .content-item-box {
+            background: var(--panel-bg); backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color); padding: 30px; position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); margin-bottom: 20px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .content-item-box:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+        .content-item-box h5 {
+            font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 20px;
+            padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .question-block {
+            margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .question-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        .question-title { color: var(--gold-primary); font-weight: bold; font-size: 15px; margin-bottom: 8px; }
+        .question-answer { color: var(--text-main); font-weight: 600; font-size: 14px; line-height: 1.8; white-space: pre-line; }
+
+        .footer-note {
+            background: var(--panel-bg); backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color); border-right: 3px solid var(--gold-primary);
+            padding: 20px; text-align: center; font-weight: 700; color: var(--text-main);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        footer {
+            text-align: center; padding: 30px; border-top: 1px solid var(--border-color);
+            color: var(--text-muted); font-size: 12px; background: rgba(6, 8, 15, 0.95); margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .details-header-flex { flex-direction: column; gap: 15px; align-items: flex-start; }
+        }
+
+        .btn-discord {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: var(--gold-primary); 
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--gold-glow);
+        }
+
+        .btn-discord:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rules-container">
+        <div id="sec1" class="details-view">
+            <div class="details-header-flex">
+                <h2><i class="fa-solid fa-scale-balanced"></i> أسئلة الشرطة</h2>
+                <a href="index.html" class="back-to-dash-btn" id="backBtn"><i class="fa-solid fa-arrow-right"></i> <span>العودة</span></a>
+            </div>
+            
+            <div class="content-item-box">
+                <h5> </h5>
+                <div id="questionsContainer">
+                    <!-- سيتم تعبئة الأسئلة تلقائياً من لوحة التحكم -->
+                </div>
+            </div>
+        </div>
+
+    <div class="footer-note">
+        <p>لم تجد ما تبحث عنه؟ بإمكانك فتح تذكرة استفسار مباشرة في ديسكورد الشرطة</p>
+        <a href="https://discord.gg/aQTfVZT2FE" target="_blank" class="btn-discord">فتح تذكرة استفسار</a>
+    </div>
+    </div>
+
+    <footer>
+        <span>جميع الحقوق محفوظة © 2026 RedWood Rp CFW</span> <br>
+        <span style="color: var(--text-muted); font-size: 11px; margin-top: 5px; display: inline-block;">تصميم وتطوير النظام بواسطة X.X95</span>
+    </footer>
+
+    <script>
+        document.getElementById('backBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetUrl = this.getAttribute('href');
+            const viewSection = document.getElementById('sec1');
+            
+            viewSection.classList.add('fade-out');
+            
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 300);
+        });
+
+        window.onload = function() {
+            let questions = JSON.parse(localStorage.getItem('policeQuestionsList'));
+            if (!questions) {
+                questions = [
+                    {
+                        q: "1- متى أوقات فتح التقديم على الشرطة؟",
+                        a: "يوم ... ويوم ... الساعة .. مساءً."
+                    },
+                    {
+                        q: "2- شروط التقديم العسكري؟",
+                        a: "يجب أن يكون عمرك 17 عامًأ فما فوق.\n1- الصوت عامل مهم جدًا في القبول .\n2- الإسم يكون واقعي و باللغة الإنجليزيه مثال ( Fahad alqhtani).\n3- حلق الشعر ( صفر )."
+                    },
+                    {
+                        q: "3- النقل العسكري متواجد؟",
+                        a: "نعم"
+                    },
+                    {
+                        q: "4- ماهي شروط النقل؟",
+                        a: "الإلمام التام بالقوانين والبروتوكولات المعمول بها داخل المدينة...\nالخبرة المهنية الواسعة في المجال الأمني...\nاجتياز المقابلة الشخصية والاختبار التقييمي."
+                    },
+                    {
+                        q: "5- كيف أقدم على نقل؟",
+                        a: "افتح تذكره نقل في دسكورد الشرطة"
+                    }
+                ];
+                localStorage.setItem('policeQuestionsList', JSON.stringify(questions));
+            }
+
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            questions.forEach((item, index) => {
+                const block = document.createElement('div');
+                block.className = 'question-block';
+                block.innerHTML = `
+                    <div class="question-title">${item.q}</div>
+                    <div class="question-answer">${item.a}</div>
+                `;
+                container.appendChild(block);
+            });
+        }
+    </script>
+</body>
+</html>

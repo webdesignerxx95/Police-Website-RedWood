@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedWood Rp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #060a12;
+            --panel-bg: rgba(10, 18, 32, 0.88);
+            --gold-primary: #1e6091; /* أزرق رئيسي احترافي */
+            --gold-glow: rgba(30, 96, 145, 0.25); /* توهج أزرق */
+            --text-main: #ffffff; /* أبيض ناصع */
+            --text-muted: #e2e8f0; /* أبيض مائل للرمادي الناعم */
+            --border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: 
+                linear-gradient(rgba(30, 96, 145, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(6, 10, 18, 0.85), rgba(6, 10, 18, 0.85)), url('redwood2.gif');
+            background-size: 30px 30px, 30px 30px, 100% 100%;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 8px var(--gold-glow); }
+            50% { box-shadow: 0 0 15px rgba(30, 96, 145, 0.4); }
+            100% { box-shadow: 0 0 8px var(--gold-glow); }
+        }
+
+        header {
+            width: 90%; max-width: 2500px; margin: 20px auto 0;
+            background: var(--panel-bg); backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color); border-top: 3px solid #3182ce;
+            padding: 12px 25px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 15px; z-index: 100; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            animation: fadeInDown 0.5s ease-out;
+        }
+
+        .brand-box { display: flex; align-items: center; gap: 12px; }
+        .brand-logo { width: 40px; height: 40px; border-radius: 40px; object-fit: cover; border: 1px solid #3182ce; box-shadow: 0 0 8px var(--gold-glow); }
+        .brand-title { font-weight: 900; font-size: 16px; letter-spacing: 1px; color: #fff; }
+        .brand-title span { color: #3182ce; text-shadow: 0 0 8px var(--gold-glow); }
+
+        nav { display: flex; gap: 8px; }
+        nav a {
+            color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 700;
+            padding: 6px 14px; border-radius: 4px; transition: all 0.3s ease; text-transform: uppercase; border: 1px solid transparent;
+        }
+        nav a:hover, nav a.active {
+            color: #ffffff; background: #1e6091; border-color: rgba(255, 255, 255, 0.3); box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .header-actions { display: flex; gap: 10px; }
+        .sys-btn {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main);
+            padding: 7px 15px; border-radius: 4px; font-size: 13px; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; gap: 6px; transition: all 0.3s ease; text-decoration: none;
+        }
+        .sys-btn:hover { background: #3182ce; color: #fff; box-shadow: 0 0 10px #3182ce; }
+        .sys-btn.discord { background: #3182ce; color: #fff; border-color: #3182ce; animation: pulseGlow 3s infinite; }
+
+        .hud-container {
+            width: 92%; max-width: 1200px; margin: 30px auto;
+            display: grid; grid-template-columns: 2fr 1fr; gap: 25px;
+            animation: fadeInUp 1s ease-out;
+        }
+        @media (max-width: 950px) { .hud-container { grid-template-columns: 1fr; } }
+
+        .hud-panel {
+            background: var(--panel-bg); backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color); padding: 30px; position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .hud-panel:hover {
+            border-color: rgba(49, 130, 206, 0.5);
+            transform: translateY(-2px);
+        }
+        .hud-panel::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 8px; height: 8px;
+            border-top: 2px solid #3182ce; border-left: 2px solid #3182ce;
+        }
+        .hud-panel::after {
+            content: ''; position: absolute; bottom: 0; right: 0; width: 8px; height: 8px;
+            border-bottom: 2px solid #3182ce; border-right: 2px solid #3182ce;
+        }
+
+        .hero-panel { margin-bottom: 25px; }
+        .hero-panel h1 { font-size: 32px; font-weight: 900; margin-bottom: 15px; color: #fff; }
+        .hero-panel h1 span { color: #3182ce; text-shadow: 0 0 10px var(--gold-glow); }
+        .hero-panel p { color: var(--text-muted); font-size: 14.5px; line-height: 1.8; }
+
+        .officer-box { display: flex; align-items: center; gap: 20px; margin-top: 15px; }
+        .officer-avatar { width: 75px; height: 75px; border-radius: 6px; object-fit: cover; border: 2px solid #3182ce; box-shadow: 0 0 10px var(--gold-glow); transition: transform 0.3s; }
+        .officer-avatar:hover { transform: scale(1.05); }
+        .officer-info h3 { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+        .officer-rank { font-size: 12px; font-weight: 700; color: #63b3ed; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .officer-note { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+        .sec-title {
+            font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px;
+        }
+        .sec-title i { color: #3182ce; text-shadow: 0 0 8px var(--gold-glow); }
+
+        .dispatch-list { list-style: none; display: flex; flex-direction: column; gap: 18px; }
+        .dispatch-item { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; padding-bottom: 12px; }
+        .dispatch-item strong { color: #fff; display: block; margin-bottom: 4px; font-size: 14px; }
+
+        .social-matrix { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .matrix-btn {
+            height: 50px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center; color: var(--text-muted);
+            text-decoration: none; font-size: 18px; transition: all 0.3s ease;
+        }
+        .matrix-btn:hover { background: #3182ce; color: #fff; border-color: #3182ce; box-shadow: 0 0 12px var(--gold-glow); transform: translateY(-2px); }
+
+        footer { text-align: center; padding: 30px; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 12px; background: rgba(6, 10, 18, 0.95); animation: fadeInDown 1s ease-out; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-box">
+            <img src="sgh.jpg" alt="Logo" class="brand-logo">
+             <div class="brand-title" style="font-size: 20px;"><span>Red</span>Wood</div> 
+            </div>
+        <nav>
+            <a href="#" class="active">الرئيسية</a>
+            <a href="Policerules2.html">قوانين الشرطة</a>
+            <a href="Section Rules.html">قوانين الأقسام</a>
+            <a href="Police Questions.html">أسئلة الشرطة</a>
+            <a href="Police Administration.html">إدارة الشرطة</a>
+            <a href="Rank Permissions.html">صلاحيات ومهام الرتب</a>
+            <a href="Permissions and Duties of Departments.html">صلاحيات ومهام الاقسام</a>
+            <a href="Police Explanations.html">شروحات الشرطة</a>
+            <a href="Police Schedule.html">جدول الشرطة</a>
+            <a href="Control Panel.html">لوحة التحكم</a>
+        </nav>
+    </header>
+
+    <div class="hud-container">
+        
+        <div>
+            <div class="hud-panel hero-panel">
+                <h1>Police <span id="mainTitleDisplay"> department</span></h1>
+                <p id="mainDescDisplay">منظومة الإدارة المركزية والعمليات الأمنية. توفير تفاصيل البروتوكولات، التوزيع الميداني، واللوائح التنظيمية الخاصة بكافة قطاعات الأجهزة الأمنية.</p>
+            </div>
+
+            <div class="hud-panel">
+                <div class="sec-title">
+                    <i class="fa-solid fa-shield-halved"></i> عسكري الأسبوع
+                </div>
+                <div class="officer-box">
+                    <img src="redwood.png" alt="Officer" class="officer-avatar">
+                    <div>
+                        <h3 id="officerNameDisplay">officer soon</h3>
+                        <div class="officer-rank" id="officerRankDisplay">Soon</div>
+                        <div class="officer-note" id="officerNoteDisplay">تقديرًا لجهوده المميزة، وانضباطه، وتفانيه في أداء مهامه، نتقدم له بخالص الشكر والتقدير، متمنين له دوام التوفيق والتميز.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 25px;">
+            <div class="hud-panel">
+                <div class="sec-title">
+                    <i class="fa-solid fa-terminal"></i> اخر اعلانات الشرطة
+                </div>
+                <ul class="dispatch-list">
+                    <li class="dispatch-item">
+                        <strong></strong>
+                        <span id="policeAnnouncement"></span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="hud-panel">
+                <div class="sec-title">
+                    <i class="fa-solid fa-network-wired"></i> 
+                </div>
+                <div class="social-matrix">
+                    <a id="tiktokLinkDisplay" href="https://www.tiktok.com/@redwood_cfw" target="_blank" class="matrix-btn"><i class="fa-brands fa-tiktok"></i></a>
+                    <a id="discordLinkDisplay" href="https://discord.gg/c6JxVFvfh" target="_blank" class="matrix-btn"><i class="fa-brands fa-discord"></i></a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <span>جميع الحقوق محفوظة © 2026 RedWood Rp CFW</span> <br>
+        <span style="color: var(--text-muted); font-size: 11px; margin-top: 5px; display: inline-block;">تصميم وتطوير النظام بواسطة X.X95</span>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedWood Rp Permissions and duties</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #06080f;
+            --panel-bg: rgba(13, 17, 26, 0.88);
+            --gold-primary: #3b82f6; /* تم التغيير إلى اللون الأزرق */
+            --gold-glow: rgba(59, 130, 246, 0.15); /* توهج أزرق خفيف */
+            --text-main: #f8fafc; /* أبيض ناصع وناعم للنصوص الرئيسية */
+            --text-muted: #cbd5e1; /* رمادي مائل للبيض للمساعدات */
+            --border-color: rgba(59, 130, 246, 0.2);
+            --red-alert: #3b82f6;
+            --gold-alert: #60a5fa;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+                radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
+            background-size: 30px 30px, 30px 30px, 100% 100%;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+        }
+
+        .rules-container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* أنيميشن الدخول والخروج */
+        .details-view {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        .details-view.fade-out {
+            animation: simpleFadeOut 0.3s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes simpleFadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        .details-header-flex {
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--gold-primary);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .details-header-flex h2 {
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .details-header-flex h2 i {
+            color: var(--gold-primary);
+            text-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        .back-to-dash-btn {
+            background: rgba(59, 130, 246, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-dash-btn:hover {
+            background: var(--gold-primary);
+            color: #fff;
+            box-shadow: 0 0 12px var(--gold-glow);
+        }
+
+        /* Content Boxes */
+        .content-item-box {
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .content-item-box:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .content-item-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 8px; height: 8px;
+            border-top: 2px solid var(--gold-primary);
+            border-left: 2px solid var(--gold-primary);
+        }
+        .content-item-box::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 8px; height: 8px;
+            border-bottom: 2px solid var(--gold-primary);
+            border-right: 2px solid var(--gold-primary);
+        }
+
+        .content-item-box h5 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content-item-box p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .content-item-box p:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        /* Footer Styling */
+        footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            background: var(--panel-bg);
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .details-header-flex {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rules-container">
+        <div id="sec1" class="details-view">
+            <div class="details-header-flex">
+                <h2 data-en="Military Ranks"><i class="fa-solid fa-star"></i> 7. صلاحيات ومهام الاقسام  </h2>
+                <div style="display: flex; gap: 150px; align-items: center;">
+                    <span style="color: #ef4444; font-weight: bold; font-size: 15px;" data-en="The color red is very important.">لون أحمر مهم جدا</span>
+                    <a href="index.html" class="back-to-dash-btn" id="backBtn"><i class="fa-solid fa-arrow-right"></i> <span data-en="Back">العودة</span></a>
+                </div>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Head Of Internal Affairs</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- يخول لرئيس الشؤون الداخلية ترقية الافراد من (اوفسر ون الى فريست سارجنت : مهم جدا في حال ترقية الى سارجنت او فريست سارجنت يجب مراجعة واتش كوماندر وتأتي الموافقهم منهم)</p>
+                <p>2-  يحق له اصدار اي تعميم يخص منسوبي الشرطة بعد مراجعة رئاسة الشرطة </p>
+                <p>3- له كامل الصلاحيات الادارية داخل قسم الشؤون الداخلية</p>
+                <p style="color: #ef4444; font-weight: bold;">5- يحق له محاسبة من اوفسر ون الى فريست سارجنت وفي حال تم رصد مخالفة على ستاف سارجنت واعلى يرفع تقرير الى رئاسة الشرطة ورئاسة الشرطة تتعامل معه </p>
+                <p style="color: #ef4444; font-weight: bold;">6- مهم جدا : محاسبة سارجنت او فريست سارجنت يكون فقط انذارات وفي حال المحاسبة توصل الى كسر او فصل يجب مراجعة واتش كوماندر فيها وتأتي الموافقه منهم </p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الاشراف الكامل على ادارة الشؤون الداخلية </p>
+                <p>2-  مراجعة الشكاوي العسكرية</p>
+                <p>3-  رصد مخالفات الافراد  و الشؤون الداخلية</p>
+                <p>4-  رفع بشكل دوري لرئاسة الشرطة تقارير تخص القسم ( مثال : شكاوي كثير على ضباط معين والخ)</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Deputy Head Of Internal Affairs</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- يخول لنائب رئيس الشؤون الداخلية ترقية الافراد من (اوفسر ون الى فريست سارجنت : مهم جدا في حال ترقية الى سارجنت او فريست سارجنت يجب مراجعة واتش كوماندر وتأتي الموافقهم منهم)</p>
+                <p>2-  يحق له اصدار اي تعميم يخص منسوبي الشرطة بعد مراجعة رئاسة الشرطة </p>
+                <p>3- له كامل الصلاحيات الادارية داخل قسم الشؤون الداخلية</p>
+                <p>4- له كامل الصلاحيات على الافراد</p>
+                <p style="color: #ef4444; font-weight: bold;">5- يحق له محاسبة من اوفسر ون الى فريست سارجنت وفي حال تم رصد مخالفة على ستاف سارجنت واعلى يرفع تقرير الى رئاسة الشرطة ورئاسة الشرطة تتعامل معه </p>
+                <p style="color: #ef4444; font-weight: bold;">6- مهم جدا : محاسبة سارجنت او فريست سارجنت يكون فقط انذارات وفي حال المحاسبة توصل الى كسر او فصل يجب مراجعة واتش كوماندر فيها وتأتي الموافقه منهم </p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الاشراف الكامل على ادارة الشؤون الداخلية </p>
+                <p>2-  مراجعة الشكاوي العسكرية</p>
+                <p>3-  رصد مخالفات الافراد  و الشؤون الداخلية</p>
+                <p>4-  رفع بشكل دوري لرئاسة الشرطة تقارير تخص القسم ( مثال : شكاوي كثير على ضباط معين والخ)</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Supervisor of Internal Affairs</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- يحق له محاسبة الافراد من (اوفسر ون الى سارجنت وفي حال مخالفة سارجنت توصل الى كسر او فصل يجب مراجعة واتش كوماندر فيها وتأتي الموافقه منهم)</p>
+                <p>2-  يحق له تعين او اعفاء اعضاء الشؤون الداخلية بعد مراجعة رئاسة الشؤون الداخلية</p>
+                <p>3- يحق له صرف نقاط وخصم نقاط على الافراد من رتبة اوفسر ون الى سارجنت وفي حال خصم على فريست سارجنت يراجع فيها من رئاسة الشؤون الداخلية</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الإشراف المباشر على أعضاء الشؤون الداخلية </p>
+                <p>2-  مراجعة الشكاوي العسكرية</p>
+                <p>3-  رصد مخالفات الافراد واعضاء الشؤون الداخلية</p>
+                <p>4-  رفع بشكل دوري لرئاسة الشؤون الداخلية تقارير تخص اعضاء الشؤون الداخلية  (مثال : عضو الشؤون الداخلية محمد القحطاني ممتاز جدا والخ )</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Internal Affairs</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>Nothing</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- استقبال الشكاوي ضد افراد الشرطة من رتبة اوفسر ون الى اوفسر ثري واستلامها  </p>
+                <p>2- رصد مخالفات الافراد من اوفسر ون الى كوربورال </p>
+                <p>3- مراقبة التزام الافراد (العتاد العسكري والخ)</p>
+                <p>4-   رفع تقارير الى مسؤولين الشؤون الداخلية عن المخالفين من اوفسر ون الى كوربورال</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Head of Police Academy</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- اعتماد البرامج والخطط التدريبية</p>
+                <p>2- تعين وتكليف اعضاء ومسؤولين في الاكاديمية</p>
+                <p>3- له كامل الصلاحيات في قسم الاكاديمية</p>
+                <p>4- يحق له محاسبة الكاديت و سولو كاديت (يجب ان يكون سبب واضح للمحاسبة)</p>
+                <p>5- يحق له ترقية من كاديت الى سولو كاديت ويجب انه يكون مع الجرد الاسبوعي (وفي حال ترقية سولو كاديت الى اوفسر ون يجب اعطاء علم الى شؤون الداخلية )</p>
+                <p>6- استلام اي اعادة تأهيل تحصل في شرطة</p>
+                <p>7- يحق اصدار قرار اعادة تأهيل فقط للكاديت وسولو كاديت </p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الاشراف على قسم الاكاديمية</p>
+                <p>2- اعتماد مناهج وكتيبات التدريبات العسكرية</p>
+                <p>3- تقيم اداء كل عضو ومسؤول في الاكاديمية</p>
+                <p style="color: #ef4444; font-weight: bold;">4- رفع تقارير دوريه عن قسم الى رئاسة الشرطة</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Deputy Head of Police Academy</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- اعتماد البرامج والخطط التدريبية</p>
+                <p>2- تعين وتكليف اعضاء ومسؤولين في الاكاديمية</p>
+                <p>3- له كامل الصلاحيات في قسم الاكاديمية</p>
+                <p>4- يحق له فصل الكاديت و سولو كاديت (المخالفة يجب ان تكون تقديريه)</p>
+                <p>5- يحق له ترقية من كاديت الى سولو كاديت ويجب انه يكون مع الجرد الاسبوعي (وفي حال ترقية سولو كاديت الى اوفسر ون يجب اعطاء علم الى شؤون الداخلية )</p>
+                <p>6- استلام اي اعادة تأهيل تحصل في شرطة</p>
+                <p>7- يحق اصدار قرار اعادة تأهيل فقط للكاديت وسولو كاديت </p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الاشراف على قسم الاكاديمية</p>
+                <p>2- اعتماد مناهج وكتيبات التدريبات العسكرية</p>
+                <p>3- تقيم اداء كل عضو ومسؤول في الاكاديمية</p>
+                <p style="color: #ef4444; font-weight: bold;">4- رفع تقارير دوريه عن قسم الى رئاسة الشرطة</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Supervisor of Police Academy</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- يحق له اعفاء او تعين اعضاء للأكاديمية</p>
+                <p>2- مسؤول عن اي فرد يحصل له اعادة تأهيل من كاديت الى سنيور ليد اوفسر</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الاشراف على اعضاء الاكاديمية</p>
+                <p>2- متابعة اداء المدربين واعضاء الاكاديمية</p>
+                <p>3- الاشراف على التدريبات العسكرية</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Police Academy</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>nothing...</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- حضور والمساهمه في التدريبات العسكرية</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Wings Commander</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- اعتماد المناهج التدريبيه للونقات</p>
+                <p>2-  يحق له تغير مسؤول الونق في حال كان ما يستحقها</p>
+                <p>3- يحق له سحب ونق في حال كان ما يستحقها او خالف قوانين الونق ( سبب واضح )</p>
+                <p style="color: #ef4444; font-weight: bold;">4- يحق اضافة نقاط للمدربين في حال تدريب العساكر كحد اقصى 5 في الاسبوع مره واحده</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الإشراف العام على جميع ونقات الشرطة</p>
+                <p>2- وضع الهيكل التنظيمي للونقات بعد موافقة (رئاسة الشرطة)</p>
+                <p>3- مراجعة اداء مسؤولين الونق</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Deputy Wings Commander</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- اعتماد المناهج التدريبيه للونقات</p>
+                <p>2-  يحق له تغير مسؤول الونق في حال كان ما يستحقها</p>
+                <p>3- يحق له سحب ونق في حال كان ما يستحقها او خالف قوانين الونق ( سبب واضح )</p>
+                <p style="color: #ef4444; font-weight: bold;">4- يحق اضافة نقاط للمدربين في حال تدريب العساكر كحد اقصى 5 في الاسبوع مره واحده</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الإشراف العام على جميع ونقات الشرطة</p>
+                <p>2- وضع الهيكل التنظيمي للونقات بعد موافقة (رئاسة الشرطة)</p>
+                <p>3- مراجعة اداء مسؤولين الونق</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                 <h5 style="color: #fab300; font-weight: bold;">Wings Leader - Deputy Wings Leader</h5>
+                <p style="color: var(--text-main); font-weight: bold;"> صلاحيات :</p>
+                <p>1- يحق له سحب ونق من اعضاء الونق التابع له بسبب واضح وصريح ومراجعة (قيادة ومسؤولين الونقات)</p>
+                <p>2- يحق له رفض استلام شخص ونق التابعه له في حال كان يوجد سبب واضح</p>
+                <p style="color: #ef4444; font-weight: bold;">4- يحق اضافة نقاط للمدربين في حال تدريب العساكر كحد اقصى 5 في الاسبوع مره واحده بعد رفع طلب لمسؤولين الونقات وتأتي الموافقه منهم</p>
+                <p style="color: var(--text-main); font-weight: bold;">مهام :</p>
+                <p>1- الاشراف على الونق التابعه له</p>
+                <p>2- فتح التقديم على الونق التابعه له بشكل اسبوعي</p>
+                <p>3- مراجعة ادارة اعضاء الونق التابعين له</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+        </div>
+    </div>
+    <footer style="background: transparent !important; backdrop-filter: none !important; border-top: none !important; text-align: center; padding: 20px; margin-top: auto;">
+        <div style="direction: rtl; unicode-bidi: embed; color: var(--text-muted); font-size: 13px;">
+            جميع الحقوق محفوظة <span dir="ltr" style="display: inline-block;">RedWood Rp CFW 2026 ©</span>
+        </div>
+        <div style="direction: rtl; unicode-bidi: embed; color: var(--text-muted); font-size: 11px; margin-top: 5px;">
+            تصميم وتطوير النظام بواسطة <span dir="ltr" style="display: inline-block;">X.X95</span>
+        </div>
+    </footer>
+    <script>
+        let currentLang = 'ar';
+
+        document.getElementById('backBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetUrl = this.getAttribute('href');
+            const viewSection = document.getElementById('sec1');
+            
+            viewSection.classList.add('fade-out');
+            
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 300);
+        });
+
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('htmlRoot');
+            const elements = document.querySelectorAll('[data-ar][data-en]');
+
+            if (currentLang === 'ar') {
+                currentLang = 'en';
+                htmlRoot.setAttribute('lang', 'en');
+                htmlRoot.setAttribute('dir', 'ltr');
+
+                elements.forEach(el => {
+                    if(el.hasAttribute('data-en')) {
+                        el.textContent = el.getAttribute('data-en');
+                    }
+                });
+            } else {
+                currentLang = 'ar';
+                htmlRoot.setAttribute('lang', 'ar');
+                htmlRoot.setAttribute('dir', 'rtl');
+
+                elements.forEach(el => {
+                    if(el.hasAttribute('data-ar')) {
+                        el.textContent = el.getAttribute('data-ar');
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

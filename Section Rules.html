@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedWood Rp Section Rules</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #06080f;
+            --panel-bg: rgba(13, 17, 26, 0.88);
+            --gold-primary: #3b82f6; /* تم التغيير إلى اللون الأزرق */
+            --gold-glow: rgba(59, 130, 246, 0.15); /* توهج أزرق خفيف */
+            --text-main: #f8fafc; /* أبيض ناصع وناعم للنصوص الرئيسية */
+            --text-muted: #cbd5e1; /* رمادي مائل للبيض للمساعدات والقوانين */
+            --border-color: rgba(59, 130, 246, 0.2);
+            --red-alert: #3b82f6;
+            --gold-alert: #60a5fa;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+                radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
+            background-size: 30px 30px, 30px 30px, 100% 100%;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+        }
+
+        .rules-container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .details-view {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        .details-view.fade-out {
+            animation: simpleFadeOut 0.3s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes simpleFadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        .details-header-flex {
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--gold-primary);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .details-header-flex h2 {
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .details-header-flex h2 i {
+            color: var(--gold-primary);
+            text-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        .back-to-dash-btn {
+            background: rgba(59, 130, 246, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-dash-btn:hover {
+            background: var(--gold-primary);
+            color: #fff;
+            box-shadow: 0 0 12px var(--gold-glow);
+        }
+
+        .content-item-box {
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .content-item-box:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .content-item-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 8px; height: 8px;
+            border-top: 2px solid var(--gold-primary);
+            border-left: 2px solid var(--gold-primary);
+        }
+        .content-item-box::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 8px; height: 8px;
+            border-bottom: 2px solid var(--gold-primary);
+            border-right: 2px solid var(--gold-primary);
+        }
+
+        .content-item-box h5 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content-item-box p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .content-item-box p:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 12px;
+            background: rgba(6, 8, 15, 0.95);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .details-header-flex {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rules-container">
+        <div id="sec1" class="details-view">
+            <div class="details-header-flex">
+                <h2><i class="fa-solid fa-star"></i> 2. قوانين اقسام الشرطة</h2>
+                <div style="display: flex; gap: 150px; align-items: center;">
+                    <span style="color: #ef4444; font-weight: bold; font-size: 15px;" data-en="The color red is very important.">لون أحمر مهم جدا</span>
+                    <a href="index.html" class="back-to-dash-btn" id="backBtn"><i class="fa-solid fa-arrow-right"></i> العودة</a>
+                </div>
+            </div>
+
+            <div class="content-item-box">
+                <h5>قوانين قسم الشؤون الداخلية</h5>
+                <p style="color: #ef4444; font-weight: bold;">1- يجب أن يحترم كل عضو في شؤون الداخلية الآخرين ويتعامل معهم بلطف</p>
+                <p>2- يجب على فرد الشؤون الالتزام بالزي الرسمي الكامل في جميع الأوقات. - يُمنع الظهور بمظهر غير لائق أو خارج عن التعليمات المعتمدة</p>
+                <p>3- يُمنع تجاوز المنجمنت أو النائب عند رفع ملاحظات أو اتخاذ قرارات. - جميع البلاغات والملاحظات تمر بالتدرج الإداري حسب التسلسل</p>
+                <p>4- يمنع على فرد الشؤون الانحياز أو التدخل الشخصي في أي قضية أو شكوى.- التعامل مع الجميع يكون بناءً على النظام فقط، وليس على العلاقات</p>
+                <p>5- يجب توثيق أي مخالفة، بلاغ، أو ملاحظة بشكل رسمي وواضح (تاريخ – وقت – اسم – تفاصيل). - أي بلاغ غير موثق يُرفض ولا يُعتمد</p>
+                <p>6- لا يحق لشؤون الداخلية التدخل في عمل تحقيقات او القيادة الا اذا طُلب منه رسميًا</p>
+                <p>7- يخضع كل فرد شؤون لتقييم شهري من قبل رئاسة الشؤون الداخلية - الأداء السيئ أو تكرار الملاحظات قد يؤدي للاستبعاد </p>
+                <p>8- أي مهمة تُكلف من المنجمنت أو النائب تعتبر واجبة التنفيذ. - الامتناع عن تنفيذ المهام أو التأخر المتعمد يُعتبر تقصير في أداء الواجب</p>
+                <p>9- يمنع استخدام اسم الشؤون أو الصلاحية للتأثير على الآخرين أو حل مشكلات شخصية. - يُحاسب بشدة من يُسيء استخدام موقعه أو صفته الرسمية</p>
+                <p>10- يجب على جميع الأعضاء الحضور في الوقت المحدد للاجتماعات الأسبوعية</p>
+                <p>11- يجب الإبلاغ عن أي مشاكل أو استفسارات بشكل صريح ومباشر للمسؤولين</p>
+                <p>12- يمنع التدخل في تكت تم استلامة شخص قبلك ( وفي حال الشخص الذي اسلتم التكت وسحب عليه سيتم محاسبة بشكل مباشر ومن ثم يحق لك التدخل في تكت)</p>
+                <p style="color: #ef4444; font-weight: bold;">13- يُمنع استخدام أسلوب الأمر أو التعالي على بقية الأفراد. - الالتزام باللباقة والاحترام في الحديث والتعامل واجب أساسي!!!</p>
+                <p style="color: #ef4444; font-weight: bold;">14- لا يحق تعديل او إضافة نظام او قانون معين يخص الشرطة او يخص الشؤون الداخلية دون الرجوع الى (رئاسة الشرطة)</p>
+                <p style="color: #ef4444; font-weight: bold;">15- الشؤون الداخلية مالها دخل ابد في مسؤوليات الأكاديمية او الونقات وغيرها من المسؤوليات</p>
+                <p style="color: #ef4444; font-weight: bold;">16- لايتم اعطاء عسكري الاسبوع الى بعد مراجعة (رئاسة الشرطة)</p>
+                <p style="color: #ef4444; font-weight: bold;">17- يُمنع تمامًا تسريب أي معلومة تتعلق بشكاوى، مخالفات، أو قضايا داخلية. - يُعتبر كشف أي معلومات داخلية مخالفة تستوجب محاسبة مباشرة.</p>
+                <p style="color: #ef4444; font-weight: bold;">18- يجب على الشؤون الداخلية (إدارة الشرطة) الالتزام بكافة القوانين الداخلية والتنظيمية المعمولة من (رئاسة الشرطة)</p>
+                <p style="color: #ef4444; font-weight: bold;">19- أي خرق للوائح وقوانين وانظمه الشرطة , يؤدي إلى اتخاذ المحاسبه شديدة جدا</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                <h5>قوانين الاكاديمية</h5>
+                <p style="color: #ef4444; font-weight: bold;">1- يجب أن يحترم كل من في الاكاديمية الآخرين ويتعامل معهم بلطف</p>
+                <p>2- يجب على الأعضاء الالتزام بالقوانين العامة الخاصة لشرطة (قواعد شرطة)</p>
+                <p>3- يجب على جميع الأعضاء الالتزام بالمواعيد المحددة لاجتماعات الأكاديمية أو التدريبات</p>
+                <p>4- التأخير أو التغيب المتكرر قد يؤدي إلى تحذيرات و استبعاد من الأكاديمية</p>
+                <p>5- على كل عضو أداء المهام بجود عالية من دون إهمال</p>
+                <p>6- يجب على الأعضاء التصرف بشكل احترافي أثناء اللعب أو التدريبات، ويشمل ذلك التواصل الواضح والصريح مع أعضاء الأكاديمية</p>
+                <p>7- يجب تجنب تصرفات تضر اللعب أو تزعج الاعب بأي شكل من الاشكال</p>
+                <p>8- يجب أن لا تعمل في الأكاديمية بمفردك (يجب التعاون مع زملائك)</p>
+                <p>9- يجب على الأعضاء المشاركة في الأنشطة والاجتماعات التي تنظمها قيادة الأكاديمية</p>
+                <p>10- الغياب الغير مبرر عن التدريب او الاجتماع قد يؤدي إلى عقوبات شديده</p>
+                <p>11- يجب على الأعضاء الإبلاغ عن أي سلوك مسيء مسؤولين الأكاديمية الى (رئاسة الشرطة)</p>
+                <p>12- يجب على جميع الأعضاء احترام التعليمات و القوانين التي يحددها المشرفون في الأكاديمية</p>
+                <p>13- يجب إبلاغ المشرفين بأي مشاكل أو استفسارات بشكل محترم</p>
+                <p style="color: #ef4444; font-weight: bold;">14- لا يحق تعديل او إضافة نظام او قانون معين يخص الشرطة او يخص الاكاديمية دون الرجوع الى (رئاسة الشرطة)</p>
+                <p style="color: #ef4444; font-weight: bold;">15- يمنع استخدام الألفاظ النابية أو السلوك العدائي تجاه الآخرين (مثال : لوح بسطار والخ..)</p>
+                <p style="color: #ef4444; font-weight: bold;">16- يُمنع تمامًا تسريب أي معلومة تتعلق بالاكاديمية - يُعتبر كشف أي معلومات داخلية مخالفة تستوجب محاسبة مباشرة.</p>
+                <p style="color: #ef4444; font-weight: bold;">17- أي خرق للوائح وقوانين وانظمه الشرطة , يؤدي إلى اتخاذ المحاسبه شديدة جدا</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div class="content-item-box">
+                <h5>قوانين الونقات العسكرية</h5>
+                <p style="color: #ef4444; font-weight: bold;">1- ضمان الالتزام بالاحترام المتبادل وحسن التعامل داخل جميع الونقات</p>
+                <p>2- يجب الالتزام بجميع أنظمة وسياسات إدارة الشرطة</p>
+                <p>3- يمنع إساءة استخدام صلاحيات المنصب لأي غرض شخصي</p>
+                <p>4- يلتزم بالحيادية والعدل في جميع القرارات</p>
+                <p>5- أي تعميم يجب اخبار فيه (رئاسة الشرطة) وتأتي الموافقة منهم</p>
+                <p>6- الرتب المسموحة للونق تكون ثابته وتمم تحديدها من قبل مسؤول الونقات بعد مراجعة (رئاسة الشرطة)</p>
+                <p>7- يجب الحفاظ على سرية المعلومات والعمليات الخاصة بالونقات</p>
+                <p>8- يمنع إصدار قرارات تخالف تعليمات (رئاسة الشرطة او مسؤولين الشرطة)</p>
+                <p>9- لا يحق لك تسليم احد ونق بدون تدريب ابد</p>
+                <p>10- يمنع استخدام ونق في وقت غير ملزوم فيه استعماله</p>
+                <p style="color: #ef4444; font-weight: bold;">11- لا يحق تعديل او إضافة نظام او قانون معين يخص الشرطة او يخص اعضاء او مسؤولين الونقات دون الرجوع الى (رئاسة الشرطة)</p>
+                <p style="color: #ef4444; font-weight: bold;">( اي شي غير مذكور فوق فهو لايحق لك ) </p>
+            </div>
+
+            <div id="dynamicRulesContainer"></div>
+        </div>
+    </div>
+
+    <footer>
+        <span>جميع الحقوق محفوظة © 2026 RedWood Rp CFW</span> <br>
+        <span style="color: var(--text-muted); font-size: 11px; margin-top: 5px; display: inline-block;">تصميم وتطوير النظام بواسطة X.X95</span>
+    </footer>
+
+    <script>
+        document.getElementById('backBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetUrl = this.getAttribute('href');
+            const viewSection = document.getElementById('sec1');
+            
+            viewSection.classList.add('fade-out');
+            
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 300);
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDynamicRules();
+        });
+
+        function loadDynamicRules() {
+            const container = document.getElementById('dynamicRulesContainer');
+            let customRules = JSON.parse(localStorage.getItem('customRulesList')) || [];
+            
+            if (customRules.length > 0) {
+                let html = `
+                    <div class="content-item-box">
+                        <h5>قوانين إضافية (تم إضافتها من لوحة التحكم)</h5>
+                `;
+                customRules.forEach((ruleText, index) => {
+                    html += `<p>${index + 1}- ${ruleText}</p>`;
+                });
+                html += `</div>`;
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '';
+            }
+        }
+    </script>
+</body>
+</html>

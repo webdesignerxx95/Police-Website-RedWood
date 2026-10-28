@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedWood Rp Rules</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #06080f;
+            --panel-bg: rgba(13, 17, 26, 0.88);
+            --gold-primary: #3b82f6; /* تم التغيير إلى اللون الأزرق */
+            --gold-glow: rgba(59, 130, 246, 0.15); /* توهج أزرق خفيف */
+            --text-main: #f8fafc; /* أبيض ناصع وناعم للنصوص الرئيسية */
+            --text-muted: #cbd5e1; /* رمادي مائل للبيض للمساعدات والقوانين */
+            --border-color: rgba(59, 130, 246, 0.2);
+            --red-alert: #992424;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.015) 1px, transparent 1px),
+                radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
+            background-size: 30px 30px, 30px 30px, 100% 100%;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .rules-container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .details-view {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        .details-view.fade-out {
+            animation: simpleFadeOut 0.3s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes simpleFadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        .details-header-flex {
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--gold-primary);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .details-header-flex h2 {
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .details-header-flex h2 i {
+            color: var(--gold-primary);
+            text-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        .back-to-dash-btn {
+            background: rgba(59, 130, 246, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-dash-btn:hover {
+            background: var(--gold-primary);
+            color: #fff;
+            box-shadow: 0 0 12px var(--gold-glow);
+        }
+
+        /* Content Boxes */
+        .content-item-box {
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .content-item-box:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .content-item-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 8px; height: 8px;
+            border-top: 2px solid var(--gold-primary);
+            border-left: 2px solid var(--gold-primary);
+        }
+        .content-item-box::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 8px; height: 8px;
+            border-bottom: 2px solid var(--gold-primary);
+            border-right: 2px solid var(--gold-primary);
+        }
+
+        .content-item-box h5 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content-item-box p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            white-space: pre-line;
+        }
+
+        .content-item-box p:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 12px;
+            background: rgba(6, 8, 15, 0.95);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .details-header-flex {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rules-container">
+
+        <div id="sec1" class="details-view">
+            <div class="details-header-flex">
+                <h2 data-en="Police Rules"><i class="fa-solid fa-scale-balanced"></i> 1. قوانين الشرطة</h2>
+                <a href="index.html" class="back-to-dash-btn" id="backBtn"><i class="fa-solid fa-arrow-right"></i> <span data-en="Back">العودة</span></a>
+            </div>
+            <div class="content-item-box">
+                <h5 data-en="Police Rules">قوانين الشرطة</h5>
+                <div id="dynamicRulesBox">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <span data-ar="جميع الحقوق محفوظة © 2026 RedWood Rp CFW" data-en="Copyright © 2026 RedWood Rp CFW. All Rights Reserved.">جميع الحقوق محفوظة © 2026 RedWood Rp CFW</span> <br>
+        <span style="color: var(--text-muted); font-size: 11px; margin-top: 5px; display: inline-block;" data-ar="تصميم وتطوير النظام بواسطة X.X95" data-en="System Architecture & Design by X.X95">تصميم وتطوير النظام بواسطة X.X95</span>
+    </footer>
+
+    <script>
+        // تفعيل أنيميشن التلاشي عند الضغط على زر العودة
+        document.getElementById('backBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetUrl = this.getAttribute('href');
+            const viewSection = document.getElementById('sec1');
+            
+            viewSection.classList.add('fade-out');
+            
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 300);
+        });
+
+        window.onload = function() {
+            let rules = JSON.parse(localStorage.getItem('policeRulesList'));
+            
+            if (!rules) {
+                rules = [
+                    { text: "1- التعامل مع المواطنين يكون بحدود العمل فقط، و يكون بشكل إحترافي و رسمي دون التطرق إلى الأشياء الشخصية إذا لم يكن لها سبب كافي", color: "#cbd5e1" },
+                    { text: "2- يحق للشرطي أخذ أي إجراء تجاه المواطن بعد وجود أدلة و أسباب كافية لفعل ذلك وتكون ضمن الاجراءات (التفتيش , القاء القبض ,الحجز ,الخ) وهذا يعني لايحق الكلبشة في حالة الاستيقاف", color: "#cbd5e1" },
+                    { text: "3- طريقة التعامل مع بلاغات المواطنين من القسم تكون بعد اخذ الهوية من المواطن ومن ثم استلام البلاغ داخل مكاتب قسم لوس و تدوينها كـ Report فالـ MDT", color: "#cbd5e1" },
+                    { text: "4- قوانين الكلبشة : يمنع كلبشة الشخص الا في حال رفع يده أو في حال تيزرته أو نطحه والسيطرة عليه", color: "#cbd5e1" },
+                    { text: "5- في حال وجود شخص ماسك سلاح بيده يجب عليك تحذيره ثم إطلاق النار على أطرافه بعد مرور 5 ثواني من استخراجه للسلاح الناري ويمنع منعا باتا صعقه بالتيزر", color: "#cbd5e1" },
+                    { text: "6- عند إلقاء القبض على أي المجرم، يتم إلقاء الحقوق عليه و يكتفي الشرطي بقول أعلى تهمة على المواطن مثل (سرقة مركبة) ، بعد ذلك يتم أخذ إجراءات السلامة و ان كان يحتاج لعناية طبية قبل دخوله لمركز الشرطة، وبعد دخوله للمركز يتم تفتيش الشخص تفتيش كامل و سحب كامل الأدوات الممنوعة و من بعد ذلك تصويره و تبصيمه و ومن ثم إعادة كلبشته و ادخاله للزنزانات و فتح كلبشاته من فتحة الباب و من ثم التعامل معاه حسب التهم الموجهة ضده.", color: "#cbd5e1" },
+                    { text: "7- الحقوق بدورها تمثل حقوق المواطن أثناء الإعتقال، وهي بالصياغة التالية : تم القاء القبض عليك من شرطة لوس سانتوس بتهمة ( مثال : سرقة بقالة ) يحق لك الالتزام بالصمت أي شيء ستقوله سيتم استخدامه ضدك في المحكمة وفي حال عدم قدرتك على تعيين محامي سيتم تعيين محامي من قبل شرطة لوس سانتوس ( لذا لا يحق للشرطي تحريفها او الإخلال في ترتيبها، و يجب على الشرطي التمثل بها مهما كان المجرم ويحق للمواطن الطلب بإعادة إلقاءها كحد أقصى مرتين )", color: "#cbd5e1" },
+                    { text: "8- عند وجود مركبة مواطن متعطلة على الطريق يجب على الفرد التأكد من سلامة الحالة و الطلب من المواطن بإبعاد مركبته من الطريق ان أمكن، و من ثم طلب سطحة لنقل المركبة", color: "#cbd5e1" },
+                    { text: "9- عند الإستيقاف المروري للمواطن يجب أن يكون الموقع آمن و تتأكد من أمانك قبل نزولك من المركبة، و من ثم إبلاغ الدسباتش و فحص المواطن و مركبته ( لا يقصد بها تفتيش المواطن ) و بعد ذلك تعرف عن نفسك و تستكمل التعامل معه بشكل طبيعي و تبلغ الدسباتش بعد الإنتهاء من الحالة.", color: "#cbd5e1" },
+                    { text: "10- قبل التعامل مع أي موقف أو الإشتباك مع المواطن يجب عليك ذكر أنك شرطي مثل ( معاك الشرطة، سلم نفسك! )", color: "#cbd5e1" }
+                ];
+                localStorage.setItem('policeRulesList', JSON.stringify(rules));
+            }
+
+            const container = document.getElementById('dynamicRulesBox');
+            container.innerHTML = '';
+
+            rules.forEach((rule) => {
+                const p = document.createElement('p');
+                
+                if (typeof rule === 'string') {
+                    p.textContent = rule;
+                } else {
+                    p.textContent = rule.text;
+                    if (rule.color) {
+                        p.style.color = rule.color; 
+                    }
+                }
+                
+                container.appendChild(p);
+            });
+        }
+    </script>
+
+</body>
+</html>
