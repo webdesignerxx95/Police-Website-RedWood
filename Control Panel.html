@@ -387,7 +387,7 @@
                 </div>
             </div>
 
-            <!-- Tab 5: Police Administration Management (جديد) -->
+            <!-- Tab 5: Police Administration Management -->
             <div id="police-admin-tab" class="tab-pane">
                 <div class="control-card">
                     <h3><i class="fa-solid fa-user-plus"></i> إضافة ضابط / قيادي جديد</h3>
@@ -432,26 +432,86 @@
     <div id="toast" class="toast"><i class="fa-solid fa-circle-check"></i> تم حفظ التغييرات بنجاح!</div>
 
 <script>
-    // رابط سيرفر Render السحابي الخاص بك
     const RENDER_SERVER_URL = "https://redwood-discord-auth.onrender.com";
 
-    // دالة إرسال اللوق المحدثة لترسل أيدي الشخص الحقيقي وقسم التعديل وسجل النشاط
+    // المتغيرات التي تحمل البيانات محلياً ليتم مزامنتها
+    let cloudData = {
+        indexSettings: {},
+        rulesList: [],
+        questionsList: [],
+        explanationsList: [],
+        policeOfficersList: []
+    };
+
     async function sendAdminLog(sectionName, actionDetails) {
         const userIdInput = sessionStorage.getItem('discord_user_id') || "غير معروف";
-        
         try {
             await fetch(`${RENDER_SERVER_URL}/api/log-action`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: userIdInput,
-                    sectionName: sectionName,
-                    actionDetails: actionDetails
-                })
+                body: JSON.stringify({ userId: userIdInput, sectionName, actionDetails })
             });
         } catch (e) {
             console.error("Error sending log to server:", e);
         }
+    }
+
+    // دالة عامة لإرسال البيانات لسيرفر Render لتحديثها للجميع
+    async function saveToCloudServer(dataType, dataContent, sectionName, actionDesc) {
+        const userIdInput = sessionStorage.getItem('discord_user_id') || "غير معروفه";
+        
+        // تحديث محلياً في المتغير
+        cloudData[dataType] = dataContent;
+        localStorage.setItem(dataType, JSON.stringify(dataContent));
+
+        try {
+            await fetch(`${RENDER_SERVER_URL}/api/update-site-data`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: userIdInput,
+                    dataType: dataType,
+                    dataContent: dataContent
+                })
+            });
+
+            await sendAdminLog(sectionName, actionDesc);
+            showToast('تم حفظ التغييرات ونشرها للجميع بنجاح!');
+        } catch (e) {
+            console.error("Error saving to cloud server:", e);
+            showToast('تم الحفظ محلياً، ولكن حدث خطأ في مزامنتها مع السيرفر العام.');
+        }
+    }
+
+    // جلب البيانات من السيرفر عند فتح لوحة التحكم
+    async function loadDataFromServer() {
+        try {
+            const res = await fetch(`${RENDER_SERVER_URL}/api/site-data`);
+            const serverData = await res.json();
+            
+            if (serverData.indexSettings) cloudData.indexSettings = serverData.indexSettings;
+            if (serverData.rulesList) cloudData.rulesList = serverData.rulesList;
+            if (serverData.questionsList) cloudData.questionsList = serverData.questionsList;
+            if (serverData.explanationsList) cloudData.explanationsList = serverData.explanationsList;
+            if (serverData.policeOfficersList) cloudData.policeOfficersList = serverData.policeOfficersList;
+        } catch (e) {
+            console.log("Could not fetch from server, falling back to local storage.");
+            // الاعتماد على التخزين المحلي كبديل مؤقت إذا واجه السيرفر انقطاع
+            cloudData.indexSettings = JSON.parse(localStorage.getItem('siteIndexSettings')) || {};
+            cloudData.rulesList = JSON.parse(localStorage.getItem('policeRulesList')) || [
+                { text: "1- التعامل مع المواطنين يكون بحدود العمل فقط، و يكون بشكل إحترافي و رسمي دون التطرق إلى الأشياء الشخصية إذا لم يكن لها سبب كافي", color: "#cbd5e1" },
+                { text: "2- يحق للشرطي أخذ أي إجراء تجاه المواطن بعد وجود أدلة و أسباب كافية لفعل ذلك وتكون ضمن الاجراءات", color: "#cbd5e1" }
+            ];
+            cloudData.questionsList = JSON.parse(localStorage.getItem('policeQuestionsList')) || [];
+            cloudData.explanationsList = JSON.parse(localStorage.getItem('policeExplanationsList')) || [];
+            cloudData.policeOfficersList = JSON.parse(localStorage.getItem('policeOfficersList')) || [];
+        }
+
+        loadIndexSettingsToInputs();
+        loadAdminRules();
+        loadAdminQuestions();
+        loadAdminExplanations();
+        loadAdminPoliceOfficers();
     }
 
     window.onload = function() {
@@ -465,11 +525,8 @@
             document.getElementById('password-overlay').style.display = 'none';
             document.getElementById('dashboard-content').style.display = 'flex';
         }
-        loadIndexSettingsToInputs();
-        loadAdminRules();
-        loadAdminQuestions();
-        loadAdminExplanations();
-        loadAdminPoliceOfficers();
+        
+        loadDataFromServer();
     }
     
     function showToast(msg) {
@@ -506,15 +563,12 @@
             tiktokUrl: document.getElementById('tiktokUrl').value,
             discordUrl: document.getElementById('discordUrl').value
         };
-        localStorage.setItem('siteIndexSettings', JSON.stringify(settings));
         
-        sendAdminLog("إعدادات الصفحة الرئيسية", "قام بتحديث إعدادات الصفحة الرئيسية والعسكري الأسبوعي.");
-
-        showToast('تم حفظ إعدادات الرئيسية بنجاح!');
+        saveToCloudServer('indexSettings', settings, "إعدادات الصفحة الرئيسية", "قام بتحديث إعدادات الصفحة الرئيسية والعسكري الأسبوعي.");
     }
 
     function loadIndexSettingsToInputs() {
-        let saved = JSON.parse(localStorage.getItem('siteIndexSettings'));
+        let saved = cloudData.indexSettings;
         if (saved) {
             document.getElementById('siteTitleWord').value = saved.titleWord || '';
             document.getElementById('siteBio').value = saved.bio || '';
@@ -528,20 +582,8 @@
     }
 
     // --- Rules Management ---
-    function getRulesFromStorage() {
-        let rules = JSON.parse(localStorage.getItem('policeRulesList'));
-        if (!rules) {
-            rules = [
-                { text: "1- التعامل مع المواطنين يكون بحدود العمل فقط، و يكون بشكل إحترافي و رسمي دون التطرق إلى الأشياء الشخصية إذا لم يكن لها سبب كافي", color: "#cbd5e1" },
-                { text: "2- يحق للشرطي أخذ أي إجراء تجاه المواطن بعد وجود أدلة و أسباب كافية لفعل ذلك وتكون ضمن الاجراءات", color: "#cbd5e1" }
-            ];
-            localStorage.setItem('policeRulesList', JSON.stringify(rules));
-        }
-        return rules;
-    }
-
     function loadAdminRules() {
-        const rules = getRulesFromStorage();
+        const rules = cloudData.rulesList || [];
         const container = document.getElementById('adminRulesContainer');
         if (!container) return;
         container.innerHTML = '';
@@ -570,67 +612,51 @@
         const text = document.getElementById('newRuleText').value.trim();
         const color = document.getElementById('newRuleColor').value;
         if(!text) { alert('الرجاء كتابة نص القانون أولاً!'); return; }
-        let rules = getRulesFromStorage();
-        rules.push({ text: text, color: color });
-        localStorage.setItem('policeRulesList', JSON.stringify(rules));
-        document.getElementById('newRuleText').value = '';
-        loadAdminRules();
         
-        sendAdminLog("إدارة القوانين", "قام بإضافة قانون جديد للموقع.");
-        showToast('تمت إضافة القانون بنجاح!');
+        let rules = cloudData.rulesList;
+        rules.push({ text: text, color: color });
+        document.getElementById('newRuleText').value = '';
+        
+        saveToCloudServer('rulesList', rules, "إدارة القوانين", "قام بإضافة قانون جديد للموقع.");
+        loadAdminRules();
     }
 
     function updateRule(index) {
-        const updatedText = document.getElementById(`rule-text-${index}`).value.trim();
-        const updatedColor = document.getElementById(`rule-color-${index}`).value;
-        if(!updatedText) { alert('لا يمكن ترك القانون فارغاً!'); return; }
-        let rules = getRulesFromStorage();
-        rules[index] = { text: updatedText, color: updatedColor };
-        localStorage.setItem('policeRulesList', JSON.stringify(rules));
-        loadAdminRules();
+        const text = document.getElementById(`rule-text-${index}`).value.trim();
+        const color = document.getElementById(`rule-color-${index}`).value;
+        if(!text) { alert('لا يمكن أن يكون نص القانون فارغاً!'); return; }
         
-        sendAdminLog("إدارة القوانين", `قام بتعديل القانون رقم (${index + 1}).`);
-        showToast('تم تحديث القانون واللون بنجاح!');
+        let rules = cloudData.rulesList;
+        rules[index] = { text, color };
+        
+        saveToCloudServer('rulesList', rules, "إدارة القوانين", `قام بتعديل القانون رقم (${index + 1}).`);
+        loadAdminRules();
     }
 
     function deleteRule(index) {
-        if(confirm('هل أنت متأكد من حذف هذا القانون؟')) {
-            let rules = getRulesFromStorage();
-            rules.splice(index, 1);
-            localStorage.setItem('policeRulesList', JSON.stringify(rules));
-            loadAdminRules();
-            
-            sendAdminLog("إدارة القوانين", `قام بحذف القانون رقم (${index + 1}).`);
-            showToast('تم حذف القانون بنجاح!');
-        }
+        if(!confirm('هل أنت متأكد من حذف هذا القانون؟')) return;
+        let rules = cloudData.rulesList;
+        rules.splice(index, 1);
+        
+        saveToCloudServer('rulesList', rules, "إدارة القوانين", `قام بحذف قانون رقم (${index + 1}).`);
+        loadAdminRules();
     }
 
     // --- Questions Management ---
-    function getQuestionsFromStorage() {
-        let questions = JSON.parse(localStorage.getItem('policeQuestionsList'));
-        if (!questions) {
-            questions = [
-                { q: "1- متى أوقات فتح التقديم على الشرطة؟", a: "يوم ... ويوم ... الساعة .. مساءً." }
-            ];
-            localStorage.setItem('policeQuestionsList', JSON.stringify(questions));
-        }
-        return questions;
-    }
-
     function loadAdminQuestions() {
-        const questions = getQuestionsFromStorage();
+        const questions = cloudData.questionsList || [];
         const container = document.getElementById('adminQuestionsContainer');
         if (!container) return;
         container.innerHTML = '';
-        questions.forEach((item, index) => {
+        questions.forEach((q, index) => {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'rule-edit-item';
             itemDiv.innerHTML = `
-                <label style="font-size: 13px; color: var(--gold-primary); font-weight: bold;"><i class="fa-solid fa-circle-question"></i> السؤال رقم (${index + 1})</label>
-                <input type="text" id="q-title-${index}" value="${item.q}" style="width:100%; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; padding:14px; border-radius:12px; margin-bottom:5px;">
-                <textarea id="q-answer-${index}" rows="2">${item.a}</textarea>
+                <label style="font-size: 13px; color: var(--gold-primary); font-weight: bold;"><i class="fa-solid fa-circle-question"></i> سؤال رقم (${index + 1})</label>
+                <input type="text" id="q-title-${index}" value="${q.title}" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; border-radius:10px;">
+                <textarea id="q-ans-${index}" rows="2">${q.answer}</textarea>
                 <div class="rule-actions-flex">
-                    <button class="btn-save-single" onclick="updateQuestion(${index})"><i class="fa-solid fa-check"></i> حفظ التعديل</button>
+                    <button class="btn-save-single" onclick="updateQuestion(${index})"><i class="fa-solid fa-check"></i> حفظ السؤال</button>
                     <button class="btn-delete" onclick="deleteQuestion(${index})"><i class="fa-solid fa-trash"></i> حذف السؤال</button>
                 </div>
             `;
@@ -641,70 +667,53 @@
     function addNewQuestion() {
         const title = document.getElementById('newQuestionTitle').value.trim();
         const answer = document.getElementById('newQuestionAnswer').value.trim();
-        if(!title || !answer) { alert('الرجاء تعبئة حقل السؤال والإجابة معاً!'); return; }
-        let questions = getQuestionsFromStorage();
-        questions.push({ q: title, a: answer });
-        localStorage.setItem('policeQuestionsList', JSON.stringify(questions));
+        if(!title || !answer) { alert('الرجاء تعبئة نص السؤال والإجابة!'); return; }
+        
+        let questions = cloudData.questionsList;
+        questions.push({ title, answer });
         document.getElementById('newQuestionTitle').value = '';
         document.getElementById('newQuestionAnswer').value = '';
-        loadAdminQuestions();
         
-        sendAdminLog("إدارة أسئلة الشرطة", "قام بإضافة سؤال جديد للموقع.");
-        showToast('تمت إضافة السؤال بنجاح!');
+        saveToCloudServer('questionsList', questions, "إدارة الأسئلة", "قام بإضافة سؤال جديد.");
+        loadAdminQuestions();
     }
 
     function updateQuestion(index) {
-        const updatedTitle = document.getElementById(`q-title-${index}`).value.trim();
-        const updatedAnswer = document.getElementById(`q-answer-${index}`).value.trim();
-        if(!updatedTitle || !updatedAnswer) { alert('لا يمكن ترك حقول السؤال فارغة!'); return; }
-        let questions = getQuestionsFromStorage();
-        questions[index] = { q: updatedTitle, a: updatedAnswer };
-        localStorage.setItem('policeQuestionsList', JSON.stringify(questions));
-        loadAdminQuestions();
+        const title = document.getElementById(`q-title-${index}`).value.trim();
+        const answer = document.getElementById(`q-ans-${index}`).value.trim();
         
-        sendAdminLog("إدارة أسئلة الشرطة", `قام بتعديل السؤال رقم (${index + 1}).`);
-        showToast('تم تحديث السؤال بنجاح!');
+        let questions = cloudData.questionsList;
+        questions[index] = { title, answer };
+        
+        saveToCloudServer('questionsList', questions, "إدارة الأسئلة", `قام بتعديل السؤال رقم (${index + 1}).`);
+        loadAdminQuestions();
     }
 
     function deleteQuestion(index) {
-        if(confirm('هل أنت متأكد من حذف هذا السؤال؟')) {
-            let questions = getQuestionsFromStorage();
-            questions.splice(index, 1);
-            localStorage.setItem('policeQuestionsList', JSON.stringify(questions));
-            loadAdminQuestions();
-            
-            sendAdminLog("إدارة أسئلة الشرطة", `قام بحذف السؤال رقم (${index + 1}).`);
-            showToast('تم حذف السؤال بنجاح!');
-        }
+        if(!confirm('هل أنت متأكد من حذف هذا السؤال؟')) return;
+        let questions = cloudData.questionsList;
+        questions.splice(index, 1);
+        
+        saveToCloudServer('questionsList', questions, "إدارة الأسئلة", `قام بحذف السؤال رقم (${index + 1}).`);
+        loadAdminQuestions();
     }
 
     // --- Explanations Management ---
-    function getExplanationsFromStorage() {
-        let explanations = JSON.parse(localStorage.getItem('policeExplanationsList'));
-        if (!explanations) {
-            explanations = [
-                { title: "شرح مبدئي", videoId: "YOUR_VIDEO_ID", desc: "وصف الشرح التوضيحي" }
-            ];
-            localStorage.setItem('policeExplanationsList', JSON.stringify(explanations));
-        }
-        return explanations;
-    }
-
     function loadAdminExplanations() {
-        const explanations = getExplanationsFromStorage();
+        const expls = cloudData.explanationsList || [];
         const container = document.getElementById('adminExplanationsContainer');
         if (!container) return;
         container.innerHTML = '';
-        explanations.forEach((item, index) => {
+        expls.forEach((ex, index) => {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'rule-edit-item';
             itemDiv.innerHTML = `
-                <label style="font-size: 13px; color: var(--gold-primary); font-weight: bold;"><i class="fa-solid fa-video"></i> الشرح رقم (${index + 1})</label>
-                <input type="text" id="expl-title-${index}" value="${item.title}" style="width:100%; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; padding:14px; border-radius:12px; margin-bottom:5px;">
-                <input type="text" id="expl-vid-${index}" value="${item.videoId}" style="width:100%; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; padding:14px; border-radius:12px; margin-bottom:5px;">
-                <textarea id="expl-desc-${index}" rows="2">${item.desc}</textarea>
+                <label style="font-size: 13px; color: var(--gold-primary); font-weight: bold;"><i class="fa-solid fa-video"></i> شرح رقم (${index + 1})</label>
+                <input type="text" id="ex-title-${index}" value="${ex.title}" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; border-radius:10px;">
+                <input type="text" id="ex-vid-${index}" value="${ex.videoId}" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; border-radius:10px;">
+                <textarea id="ex-desc-${index}" rows="2">${ex.desc}</textarea>
                 <div class="rule-actions-flex">
-                    <button class="btn-save-single" onclick="updateExplanation(${index})"><i class="fa-solid fa-check"></i> حفظ التعديل</button>
+                    <button class="btn-save-single" onclick="updateExplanation(${index})"><i class="fa-solid fa-check"></i> حفظ الشرح</button>
                     <button class="btn-delete" onclick="deleteExplanation(${index})"><i class="fa-solid fa-trash"></i> حذف الشرح</button>
                 </div>
             `;
@@ -716,152 +725,106 @@
         const title = document.getElementById('newExplTitle').value.trim();
         const videoId = document.getElementById('newExplVideoId').value.trim();
         const desc = document.getElementById('newExplDesc').value.trim();
-        if(!title || !videoId) { alert('الرجاء تعبئة العنوان ومعرف الفيديو على الأقل!'); return; }
-        let explanations = getExplanationsFromStorage();
-        explanations.push({ title: title, videoId: videoId, desc: desc });
-        localStorage.setItem('policeExplanationsList', JSON.stringify(explanations));
+        if(!title || !videoId) { alert('الرجاء إدخال عنوان الشرح ومعرف فيديو اليوتيوب!'); return; }
+        
+        let expls = cloudData.explanationsList;
+        expls.push({ title, videoId, desc });
         document.getElementById('newExplTitle').value = '';
         document.getElementById('newExplVideoId').value = '';
         document.getElementById('newExplDesc').value = '';
-        loadAdminExplanations();
         
-        sendAdminLog("إدارة شروحات الشرطة", "قام بإضافة شرح فيديو جديد.");
-        showToast('تمت إضافة الشرح بنجاح!');
+        saveToCloudServer('explanationsList', expls, "إدارة الشروحات", "قام بإضافة شرح جديد.");
+        loadAdminExplanations();
     }
 
     function updateExplanation(index) {
-        const updatedTitle = document.getElementById(`expl-title-${index}`).value.trim();
-        const updatedVid = document.getElementById(`expl-vid-${index}`).value.trim();
-        const updatedDesc = document.getElementById(`expl-desc-${index}`).value.trim();
-        if(!updatedTitle || !updatedVid) { alert('لا يمكن ترك الحقول الأساسية فارغة!'); return; }
-        let explanations = getExplanationsFromStorage();
-        explanations[index] = { title: updatedTitle, videoId: updatedVid, desc: updatedDesc };
-        localStorage.setItem('policeExplanationsList', JSON.stringify(explanations));
-        loadAdminExplanations();
+        const title = document.getElementById(`ex-title-${index}`).value.trim();
+        const videoId = document.getElementById(`ex-vid-${index}`).value.trim();
+        const desc = document.getElementById(`ex-desc-${index}`).value.trim();
         
-        sendAdminLog("إدارة شروحات الشرطة", `قام بتعديل الشرح رقم (${index + 1}).`);
-        showToast('تم تحديث الشرح بنجاح!');
+        let expls = cloudData.explanationsList;
+        expls[index] = { title, videoId, desc };
+        
+        saveToCloudServer('explanationsList', expls, "إدارة الشروحات", `قام بتعديل الشرح رقم (${index + 1}).`);
+        loadAdminExplanations();
     }
 
     function deleteExplanation(index) {
-        if(confirm('هل أنت متأكد من حذف هذا الشرح؟')) {
-            let explanations = getExplanationsFromStorage();
-            explanations.splice(index, 1);
-            localStorage.setItem('policeExplanationsList', JSON.stringify(explanations));
-            loadAdminExplanations();
-            
-            sendAdminLog("إدارة شروحات الشرطة", `قام بحذف الشرح رقم (${index + 1}).`);
-            showToast('تم حذف الشرح بنجاح!');
-        }
+        if(!confirm('هل أنت متأكد من حذف هذا الشرح؟')) return;
+        let expls = cloudData.explanationsList;
+        expls.splice(index, 1);
+        
+        saveToCloudServer('explanationsList', expls, "إدارة الشروحات", `قام بحذف الشرح رقم (${index + 1}).`);
+        loadAdminExplanations();
     }
 
-    // --- Police Administration Management ---
-    function getPoliceOfficersFromStorage() {
-        return JSON.parse(localStorage.getItem('policeAdministrationList')) || [
-            {
-                tierTitle: "Senior Commanders",
-                officers: [
-                    { name: "T-1 ABDULLAH ALOTIBI", rank: "State Trooper Commissioner", img: "ABDULLAH ALOTIBI.png" },
-                    { name: "M-0 Sharlot Klyde", rank: "State High Commander", img: "Sharlot Klyde.png" },
-                    { name: "T-3 Lucas Hunter", rank: "State High Commander", img: "Lucas Hunter.png" }
-                ]
-            },
-            {
-                tierTitle: "Chiefs Leadership",
-                officers: [
-                    { name: "A-1 Manuel Norbega", rank: "LSPD Chief - Swat Commander", img: "Manuel Norbega.png" },
-                    { name: "Nothing", rank: "SASP CHIEF", img: "" }
-                ]
-            },
-            {
-                tierTitle: "Department Administration",
-                officers: [
-                    { name: "Tamim Ahmed", rank: "Watch Commander", img: "Tamim Ahmed.png" },
-                    { name: "Jackson Smith", rank: "Watch Commander", img: "nnnaw.jpg" },
-                    { name: "Arthur William", rank: "Head of P.A", img: "Arthur William.png" }
-                ]
-            }
-        ];
-    }
-
+    // --- Police Officers Management ---
     function loadAdminPoliceOfficers() {
-        let data = getPoliceOfficersFromStorage();
+        const officers = cloudData.policeOfficersList || [];
         const container = document.getElementById('adminPoliceOfficersContainer');
         if (!container) return;
         container.innerHTML = '';
-
-        data.forEach((tier, tierIndex) => {
-            tier.officers.forEach((off, offIndex) => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'rule-edit-item';
-                itemDiv.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <label style="font-size: 13px; color: var(--gold-primary); font-weight: bold;"><i class="fa-solid fa-user-shield"></i> [${tier.tierTitle}] - ${off.name}</label>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <input type="text" id="off-name-${tierIndex}-${offIndex}" value="${off.name}" style="background:rgba(0,0,0,0.5); border:1px solid var(--panel-border); color:#fff; padding:10px; border-radius:8px;">
-                        <input type="text" id="off-rank-${tierIndex}-${offIndex}" value="${off.rank}" style="background:rgba(0,0,0,0.5); border:1px solid var(--panel-border); color:#fff; padding:10px; border-radius:8px;">
-                    </div>
-                    <div class="rule-actions-flex">
-                        <button class="btn-save-single" onclick="updateOfficer(${tierIndex}, ${offIndex})"><i class="fa-solid fa-check"></i> حفظ التعديل</button>
-                        <button class="btn-delete" onclick="deleteOfficer(${tierIndex}, ${offIndex})"><i class="fa-solid fa-trash"></i> حذف الضابط</button>
-                    </div>
-                `;
-                container.appendChild(itemDiv);
-            });
+        officers.forEach((off, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'rule-edit-item';
+            itemDiv.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <label style="font-size: 13px; color: var(--gold-primary); font-weight: bold;"><i class="fa-solid fa-user-shield"></i> ضابط رقم (${index + 1})</label>
+                    <select id="off-tier-${index}" style="padding:8px; background:#000; color:#fff; border:1px solid var(--panel-border); border-radius:8px;">
+                        <option value="Senior Commanders" ${off.tier === 'Senior Commanders' ? 'selected' : ''}>Senior Commanders</option>
+                        <option value="Chiefs Leadership" ${off.tier === 'Chiefs Leadership' ? 'selected' : ''}>Chiefs Leadership</option>
+                        <option value="Department Administration" ${off.tier === 'Department Administration' ? 'selected' : ''}>Department Administration</option>
+                    </select>
+                </div>
+                <input type="text" id="off-name-${index}" value="${off.name}" placeholder="اسم الضابط" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; border-radius:10px;">
+                <input type="text" id="off-rank-${index}" value="${off.rank}" placeholder="الرتبة" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; border-radius:10px;">
+                <input type="text" id="off-img-${index}" value="${off.img}" placeholder="اسم الصورة" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--panel-border); color:#fff; border-radius:10px;">
+                <div class="rule-actions-flex">
+                    <button class="btn-save-single" onclick="updateOfficer(${index})"><i class="fa-solid fa-check"></i> حفظ الضابط</button>
+                    <button class="btn-delete" onclick="deleteOfficer(${index})"><i class="fa-solid fa-trash"></i> حذف الضابط</button>
+                </div>
+            `;
+            container.appendChild(itemDiv);
         });
     }
 
     function addNewOfficer() {
-        const tierTitle = document.getElementById('newOfficerTier').value;
+        const tier = document.getElementById('newOfficerTier').value;
         const name = document.getElementById('newOfficerName').value.trim();
         const rank = document.getElementById('newOfficerRank').value.trim();
         const img = document.getElementById('newOfficerImg').value.trim();
-
-        if(!name || !rank) { alert('الرجاء إدخال اسم الضابط ورتبته على الأقل!'); return; }
-
-        let data = getPoliceOfficersFromStorage();
-        let targetTier = data.find(t => t.tierTitle === tierTitle);
-        if(targetTier) {
-            targetTier.officers.push({ name: name, rank: rank, img: img });
-        }
-        localStorage.setItem('policeAdministrationList', JSON.stringify(data));
+        if(!name || !rank) { alert('الرجاء إدخال اسم الضابط ورتبته!'); return; }
         
+        let officers = cloudData.policeOfficersList;
+        officers.push({ tier, name, rank, img });
         document.getElementById('newOfficerName').value = '';
         document.getElementById('newOfficerRank').value = '';
         document.getElementById('newOfficerImg').value = '';
-        loadAdminPoliceOfficers();
         
-        sendAdminLog("إدارة قيادات الشرطة", `قام بإضافة ضابط جديد (${name}) برتبة (${rank}).`);
-        showToast('تمت إضافة الضابط بنجاح!');
+        saveToCloudServer('policeOfficersList', officers, "إدارة قيادات الشرطة", "قام بإضافة ضابط جديد.");
+        loadAdminPoliceOfficers();
     }
 
-    function updateOfficer(tierIndex, offIndex) {
-        const name = document.getElementById(`off-name-${tierIndex}-${offIndex}`).value.trim();
-        const rank = document.getElementById(`off-rank-${tierIndex}-${offIndex}`).value.trim();
-
-        let data = getPoliceOfficersFromStorage();
-        data[tierIndex].officers[offIndex].name = name;
-        data[tierIndex].officers[offIndex].rank = rank;
-
-        localStorage.setItem('policeAdministrationList', JSON.stringify(data));
-        loadAdminPoliceOfficers();
+    function updateOfficer(index) {
+        const tier = document.getElementById(`off-tier-${index}`).value;
+        const name = document.getElementById(`off-name-${index}`).value.trim();
+        const rank = document.getElementById(`off-rank-${index}`).value.trim();
+        const img = document.getElementById(`off-img-${index}`).value.trim();
         
-        sendAdminLog("إدارة قيادات الشرطة", `قام بتعديل بيانات الضابط (${name}).`);
-        showToast('تم تحديث بيانات الضابط بنجاح!');
+        let officers = cloudData.policeOfficersList;
+        officers[index] = { tier, name, rank, img };
+        
+        saveToCloudServer('policeOfficersList', officers, "إدارة قيادات الشرطة", `قام بتعديل بيانات الضابط (${name}).`);
+        loadAdminPoliceOfficers();
     }
 
-    function deleteOfficer(tierIndex, offIndex) {
-        if(confirm('هل أنت متأكد من حذف هذا الضابط؟')) {
-            let data = getPoliceOfficersFromStorage();
-            let deletedName = data[tierIndex].officers[offIndex].name;
-            data[tierIndex].officers.splice(offIndex, 1);
-            localStorage.setItem('policeAdministrationList', JSON.stringify(data));
-            loadAdminPoliceOfficers();
-            
-            sendAdminLog("إدارة قيادات الشرطة", `قام بحذف الضابط (${deletedName}).`);
-            showToast('تم حذف الضابط بنجاح!');
-        }
+    function deleteOfficer(index) {
+        if(!confirm('هل أنت متأكد من حذف هذا الضابط؟')) return;
+        let officers = cloudData.policeOfficersList;
+        officers.splice(index, 1);
+        
+        saveToCloudServer('policeOfficersList', officers, "إدارة قيادات الشرطة", "قام بحذف ضابط.");
+        loadAdminPoliceOfficers();
     }
 </script>
 </body>
