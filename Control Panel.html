@@ -38,18 +38,13 @@
         }
 
         /* شاشة تسجيل الدخول الفاخرة */
-<div id="password-overlay">
-        <div class="pass-box">
-            <div class="pass-box-icon"><i class="fa-solid fa-shield-halved"></i></div>
-            <h3>تحقق مشرفي RedWood RP</h3>
-            <p>قم بتسجيل الدخول باستخدام حسابك في ديسكورد للتحقق من رتبة الإدارة:</p>
-            <a href="https://discord.com/api/oauth2/authorize?client_id=1564836241416003635&redirect_uri=https%3A%2F%2Fredwood-discord-auth.onrender.com%2Fapi%2Fauth%2Fdiscord%2Fcallback&response_type=code&scope=identify%20guilds.members.read" class="btn-action" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                <i class="fa-brands fa-discord"></i> تسجيل الدخول عبر Discord
-            </a>
-            <div id="error-msg">عذراً، أنت لا تمتلك رتبة الإدارة المطلوبة!</div>
-        </div>
-    </div>
-        
+        #password-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(6, 10, 18, 0.95); backdrop-filter: blur(25px);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            z-index: 9999; animation: fadeIn 0.5s ease;
+        }
+
         #password-overlay.fade-out {
             animation: fadeOut 0.4s ease forwards;
         }
@@ -259,10 +254,11 @@
         <div class="pass-box">
             <div class="pass-box-icon"><i class="fa-solid fa-shield-halved"></i></div>
             <h3>تحقق مشرفي RedWood RP</h3>
-            <p>أدخل أيدي ديسكورد (Discord User ID) الخاص بك للتحقق من رتبة الإدارة:</p>
-            <input type="text" id="passInput" placeholder="أدخل أيدي ديسكورد هنا...">
-            <button onclick="checkPassword()">التحقق عبر ديسكورد</button>
-            <div id="error-msg">عذراً، أنت لا تمتلك رتبة الإدارة أو الأيدي خاطئ!</div>
+            <p>قم بتسجيل الدخول باستخدام حسابك في ديسكورد للتحقق من رتبة الإدارة:</p>
+            <a href="https://discord.com/api/oauth2/authorize?client_id=1564836241416003635&redirect_uri=https%3A%2F%2Fredwood-discord-auth.onrender.com%2Fapi%2Fauth%2Fdiscord%2Fcallback&response_type=code&scope=identify%20guilds.members.read" class="btn-action" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fa-brands fa-discord"></i> تسجيل الدخول عبر Discord
+            </a>
+            <div id="error-msg">عذراً، أنت لا تمتلك رتبة الإدارة المطلوبة!</div>
         </div>
     </div>
 
@@ -441,7 +437,7 @@
 
     // دالة إرسال اللوق المحدثة لترسل أيدي الشخص الحقيقي وقسم التعديل وسجل النشاط
     async function sendAdminLog(sectionName, actionDetails) {
-        const userIdInput = document.getElementById('passInput').value.trim() || sessionStorage.getItem('discord_user_id') || "غير معروف";
+        const userIdInput = sessionStorage.getItem('discord_user_id') || "غير معروف";
         
         try {
             await fetch(`${RENDER_SERVER_URL}/api/log-action`, {
@@ -458,45 +454,7 @@
         }
     }
 
-    async function checkPassword() {
-        const userIdInput = document.getElementById('passInput').value.trim();
-        const errorMsg = document.getElementById('error-msg');
-        
-        if(!userIdInput) {
-            errorMsg.innerText = 'الرجاء إدخال أيدي ديسكورد الخاص بك!';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        try {
-            errorMsg.style.display = 'none';
-            
-            const response = await fetch(`${RENDER_SERVER_URL}/check-role?userId=${userIdInput}`);
-            const data = await response.json();
-
-            if(data.success) {
-                const overlay = document.getElementById('password-overlay');
-                overlay.classList.add('fade-out'); 
-                
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                    const dashboard = document.getElementById('dashboard-content');
-                    dashboard.style.display = 'flex';
-                    sessionStorage.setItem('authMaster', 'true');
-                    sessionStorage.setItem('discord_user_id', userIdInput); // حفظ الأيدي للاستخدام المستقبلي باللوقات
-                }, 400); 
-            } else {
-                errorMsg.innerText = 'عذراً، أنت لا تمتلك رتبة الإدارة المطلوبة أو الأيدي خاطئ!';
-                errorMsg.style.display = 'block';
-            }
-        } catch(e) {
-            console.error(e);
-            errorMsg.innerText = 'حدث خطأ أثناء الاتصال بسيرفر التحقق السحابي.';
-            errorMsg.style.display = 'block';
-        }
-    }
-
-window.onload = function() {
+    window.onload = function() {
         const urlParams = new URLSearchParams(window.location.search);
         if(urlParams.get('auth') === 'true') {
             sessionStorage.setItem('authMaster', 'true');
