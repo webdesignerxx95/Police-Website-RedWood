@@ -217,5 +217,40 @@
     </footer>
 
     <script src="script.js"></script>
+    
+    <script>
+    async function fetchSiteUpdates() {
+        try {
+            // هذا السطر يطلب البيانات المحدثة من سيرفر البوت حقك
+            const response = await fetch('/api/get-site-data');
+            const data = await response.json();
+
+            // تحديث الإعلان في الموقع تلقائياً
+            const annElement = document.getElementById('policeAnnouncement');
+            if (annElement && data.announcement) {
+                annElement.innerText = data.announcement;
+            }
+
+            // تحديث اسم ورتبة عسكري الأسبوع تلقائياً
+            const nameElement = document.getElementById('officerNameDisplay');
+            if (nameElement && data.weeklyOfficer) {
+                nameElement.innerText = data.weeklyOfficer.name;
+            }
+
+            const rankElement = document.getElementById('officerRankDisplay');
+            if (rankElement && data.weeklyOfficer) {
+                rankElement.innerText = data.weeklyOfficer.rank;
+            }
+
+        } catch (e) {
+            console.log("جارٍ تحديث البيانات...");
+        }
+    }
+
+    // أول ما تفتح الصفحة يجيب البيانات، وكل 5 ثواني يحدثها لحالها
+    fetchSiteUpdates();
+    setInterval(fetchSiteUpdates, 5000);
+</script>
+    
 </body>
 </html>
