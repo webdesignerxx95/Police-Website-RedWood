@@ -10,10 +10,10 @@
         :root {
             --bg-deep: #06080f;
             --panel-bg: rgba(13, 17, 26, 0.88);
-            --gold-primary: #3b82f6; /* تم التغيير إلى اللون الأزرق */
-            --gold-glow: rgba(59, 130, 246, 0.15); /* توهج أزرق خفيف */
-            --text-main: #f8fafc; /* أبيض ناصع وناعم للنصوص الرئيسية */
-            --text-muted: #cbd5e1; /* رمادي مائل للبيض للمساعدات */
+            --gold-primary: #3b82f6;
+            --gold-glow: rgba(59, 130, 246, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
             --border-color: rgba(59, 130, 246, 0.2);
         }
 
@@ -51,23 +51,13 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes simpleFadeOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
 
         .details-header-flex {
@@ -100,11 +90,6 @@
             border-color: rgba(59, 130, 246, 0.4);
             transform: translateY(-2px);
         }
-        .content-item-box h5 {
-            font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 20px;
-            padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
 
         .question-block {
             margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -131,21 +116,13 @@
         }
 
         .btn-discord {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 12px 30px;
-            background: var(--gold-primary); 
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: all 0.3s ease;
+            display: inline-block; margin-top: 15px; padding: 12px 30px;
+            background: var(--gold-primary); color: #ffffff; text-decoration: none;
+            border-radius: 8px; font-weight: bold; transition: all 0.3s ease;
             box-shadow: 0 4px 15px var(--gold-glow);
         }
-
         .btn-discord:hover {
-            background: #2563eb;
-            transform: translateY(-2px);
+            background: #2563eb; transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         }
     </style>
@@ -160,17 +137,36 @@
             </div>
             
             <div class="content-item-box">
-                <h5> </h5>
                 <div id="questionsContainer">
-                    <!-- سيتم تعبئة الأسئلة تلقائياً من لوحة التحكم -->
+                    <!-- الأسئلة الثابتة المباشرة -->
+                    <div class="question-block">
+                        <div class="question-title">1- متى أوقات فتح التقديم على الشرطة؟</div>
+                        <div class="question-answer">يوم ... ويوم ... الساعة .. مساءً.</div>
+                    </div>
+                    <div class="question-block">
+                        <div class="question-title">2- شروط التقديم العسكري؟</div>
+                        <div class="question-answer">يجب أن يكون عمرك 17 عامًأ فما فوق.\n1- الصوت عامل مهم جدًا في القبول .\n2- الإسم يكون واقعي و باللغة الإنجليزيه مثال ( Fahad alqhtani).\n3- حلق الشعر ( صفر ).</div>
+                    </div>
+                    <div class="question-block">
+                        <div class="question-title">3- النقل العسكري متواجد؟</div>
+                        <div class="question-answer">نعم</div>
+                    </div>
+                    <div class="question-block">
+                        <div class="question-title">4- ماهي شروط النقل؟</div>
+                        <div class="question-answer">الإلمام التام بالقوانين والبروتوكولات المعمول بها داخل المدينة...\nالخبرة المهنية الواسعة في المجال الأمني...\nاجتياز المقابلة الشخصية والاختبار التقييمي.</div>
+                    </div>
+                    <div class="question-block">
+                        <div class="question-title">5- كيف أقدم على نقل؟</div>
+                        <div class="question-answer">افتح تذكره نقل في دسكورد الشرطة</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-    <div class="footer-note">
-        <p>لم تجد ما تبحث عنه؟ بإمكانك فتح تذكرة استفسار مباشرة في ديسكورد الشرطة</p>
-        <a href="https://discord.gg/aQTfVZT2FE" target="_blank" class="btn-discord">فتح تذكرة استفسار</a>
-    </div>
+        <div class="footer-note">
+            <p>لم تجد ما تبحث عنه؟ بإمكانك فتح تذكرة استفسار مباشرة في ديسكورد الشرطة</p>
+            <a href="https://discord.gg/aQTfVZT2FE" target="_blank" class="btn-discord">فتح تذكرة استفسار</a>
+        </div>
     </div>
 
     <footer>
@@ -190,48 +186,6 @@
                 window.location.href = targetUrl;
             }, 300);
         });
-
-        window.onload = function() {
-            let questions = JSON.parse(localStorage.getItem('policeQuestionsList'));
-            if (!questions) {
-                questions = [
-                    {
-                        q: "1- متى أوقات فتح التقديم على الشرطة؟",
-                        a: "يوم ... ويوم ... الساعة .. مساءً."
-                    },
-                    {
-                        q: "2- شروط التقديم العسكري؟",
-                        a: "يجب أن يكون عمرك 17 عامًأ فما فوق.\n1- الصوت عامل مهم جدًا في القبول .\n2- الإسم يكون واقعي و باللغة الإنجليزيه مثال ( Fahad alqhtani).\n3- حلق الشعر ( صفر )."
-                    },
-                    {
-                        q: "3- النقل العسكري متواجد؟",
-                        a: "نعم"
-                    },
-                    {
-                        q: "4- ماهي شروط النقل؟",
-                        a: "الإلمام التام بالقوانين والبروتوكولات المعمول بها داخل المدينة...\nالخبرة المهنية الواسعة في المجال الأمني...\nاجتياز المقابلة الشخصية والاختبار التقييمي."
-                    },
-                    {
-                        q: "5- كيف أقدم على نقل؟",
-                        a: "افتح تذكره نقل في دسكورد الشرطة"
-                    }
-                ];
-                localStorage.setItem('policeQuestionsList', JSON.stringify(questions));
-            }
-
-            const container = document.getElementById('questionsContainer');
-            container.innerHTML = '';
-
-            questions.forEach((item, index) => {
-                const block = document.createElement('div');
-                block.className = 'question-block';
-                block.innerHTML = `
-                    <div class="question-title">${item.q}</div>
-                    <div class="question-answer">${item.a}</div>
-                `;
-                container.appendChild(block);
-            });
-        }
     </script>
 </body>
 </html>
